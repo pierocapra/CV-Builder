@@ -1,8 +1,66 @@
 import React, { useState, useEffect } from 'react';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors
+  } from '@dnd-kit/core';
+  import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+    verticalListSortingStrategy
+  } from '@dnd-kit/sortable';
+  import { CSS } from '@dnd-kit/utilities';
+
+  
+  
+  function SortableItem({ id, children }) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    } = useSortable({ id });
+  
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      cursor: 'grab',
+    };
+  
+    return (
+      <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        {children}
+      </div>
+    );
+  }
+  
 
 function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
+
+  // Setup sensors
+const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  );
+  
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = selectedItems.findIndex(i => i.id === active.id);
+      const newIndex = selectedItems.findIndex(i => i.id === over.id);
+      setSelectedItems(items => arrayMove(items, oldIndex, newIndex));
+    }
+  };
 
   useEffect(() => {
     const personal = JSON.parse(localStorage.getItem('cvData')) || {};
@@ -14,13 +72,15 @@ function CvBuilder() {
   }, []);
 
   const toggleItem = (type, item) => {
-    const key = JSON.stringify({ type, item });
+    const id = `${type}-${JSON.stringify(item)}`;
+    const newItem = { type, item, id };
     setSelectedItems(prev =>
-      prev.some(i => JSON.stringify(i) === key)
-        ? prev.filter(i => JSON.stringify(i) !== key)
-        : [...prev, { type, item }]
+      prev.some(i => i.id === id)
+        ? prev.filter(i => i.id !== id)
+        : [...prev, newItem]
     );
   };
+  
 
   return (
     <div className="flex min-h-screen gap-6">
@@ -110,37 +170,51 @@ function CvBuilder() {
       </aside>
 
       {/* Preview Area */}
-      <section className="flex-1 bg-gray-100 p-6 rounded-lg shadow-inner">
-        <h2 className="text-xl font-bold mb-4">CV Preview</h2>
-        {selectedItems.map((entry, idx) => (
-          <div key={idx} className="mb-4 border-b pb-2">
-            {entry.type === 'personal' && (
-              <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
-            )}
-            {entry.type === 'education' && (
-              <div>
-                <h3 className="font-semibold">{entry.item.degree} in {entry.item.field}</h3>
-                <p>{entry.item.school}, {entry.item.location}</p>
-                <p>{entry.item.startDate} – {entry.item.endDate}</p>
-              </div>
-            )}
-            {entry.type === 'work' && (
-              <div>
-                <h3 className="font-semibold">{entry.item.title}</h3>
-                <p>{entry.item.company}, {entry.item.location}</p>
-                <p>{entry.item.startDate} – {entry.item.endDate}</p>
-                <p>{entry.item.description}</p>
-              </div>
-            )}
-            {entry.type === 'skills' && (
-              <p>{entry.item.name} ({entry.item.level})</p>
-            )}
-            {entry.type === 'links' && (
-              <p><a href={entry.item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{entry.item.label}</a></p>
-            )}
-          </div>
-        ))}
-      </section>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext
+            items={selectedItems.map(item => item.id)}
+            strategy={verticalListSortingStrategy}
+        >
+            <section className="flex-1 bg-gray-100 p-6 rounded-lg shadow-inner">
+            <h2 className="text-xl font-bold mb-4">CV Preview</h2>
+            {selectedItems.map((entry) => (
+                <SortableItem key={entry.id} id={entry.id}>
+                <div className="mb-4 border-b pb-2 bg-white p-2 rounded shadow">
+                    {entry.type === 'personal' && (
+                    <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
+                    )}
+                    {entry.type === 'education' && (
+                    <div>
+                        <h3 className="font-semibold">{entry.item.degree} in {entry.item.field}</h3>
+                        <p>{entry.item.school}, {entry.item.location}</p>
+                        <p>{entry.item.startDate} – {entry.item.endDate}</p>
+                    </div>
+                    )}
+                    {entry.type === 'work' && (
+                    <div>
+                        <h3 className="font-semibold">{entry.item.title}</h3>
+                        <p>{entry.item.company}, {entry.item.location}</p>
+                        <p>{entry.item.startDate} – {entry.item.endDate}</p>
+                        <p>{entry.item.description}</p>
+                    </div>
+                    )}
+                    {entry.type === 'skills' && (
+                    <p>{entry.item.name} ({entry.item.level})</p>
+                    )}
+                    {entry.type === 'links' && (
+                    <p>
+                        <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        {entry.item.label}
+                        </a>
+                    </p>
+                    )}
+                </div>
+                </SortableItem>
+            ))}
+            </section>
+        </SortableContext>
+      </DndContext>
+
     </div>
   );
 }
