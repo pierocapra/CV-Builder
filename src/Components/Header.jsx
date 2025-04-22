@@ -1,12 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-export default function Header() {
+const Header = () => {
   return (
-    <header className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-      <h1 className="text-2xl font-bold text-gray-800">CV Builder</h1>
-      <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-        Login
-      </button>
+    <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+      <h1 className="text-2xl font-bold text-blue-600">My CV App</h1>
+      <div className="space-x-4">
+        <Link to="/" className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
+          Login
+        </Link>
+        <Link to="/cv-builder" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+          Go to CV Builder
+        </Link>
+      </div>
     </header>
   );
-}
+};
+
+export default Header;
