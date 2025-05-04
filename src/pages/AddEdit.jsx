@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Components/Modal';
-import DataManager from '../Components/DataManager';
+import PersonalInfoManager from '../Components/PersonalInfoManager';
+import AdditionalInfoManager from '../Components/AdditionalinfoManager';
 import EducationManager from '../Components/EducationManager';
 import WorkExperienceManager from "../Components/WorkExperienceManager";
 import SkillsManager from '../Components/SkillsManager';
 import LinksManager from '../Components/LinksManager';
 
 function AddEdit() {
-  const [cvData, setCvData] = useState(null);
-  const [isDataModalOpen, setIsDataModalOpen] = useState(false);
+  const [personalInfo, setPersonalInfo] = useState(null);
+  const [isPersonalInfoOpen, setIsPersonalInfoOpen] = useState(false);
+
+  const [additionalInfo, setAdditionalInfo] = useState(null);
+  const [isAdditionalInfoOpen, setIsAdditionalInfoOpen] = useState(false);
 
   const [education, setEducation] = useState([]);
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
@@ -26,21 +30,21 @@ function AddEdit() {
   const [isLinksModalOpen, setIsLinksModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
 
-  
-
   useEffect(() => {
-    const savedCV = localStorage.getItem('cvData');
+    const savedPersonalInfo = localStorage.getItem('personalInfo');
+    const savedAdditionalInformation = localStorage.getItem('additionalInfo');
     const savedEducation = localStorage.getItem('education');
     const savedWork = localStorage.getItem('workExperience');
     const savedSkills = localStorage.getItem('skills');
     const savedLinks = localStorage.getItem('links');
 
-    if (savedCV) setCvData(JSON.parse(savedCV));
+    if (savedPersonalInfo) setPersonalInfo(JSON.parse(savedPersonalInfo));
+    if (savedAdditionalInformation) setAdditionalInfo(JSON.parse(savedAdditionalInformation));
     if (savedEducation) setEducation(JSON.parse(savedEducation));
     if (savedWork) setWorkExperience(JSON.parse(savedWork));
     if (savedSkills) setSkills(JSON.parse(savedSkills));
     if (savedLinks) setLinks(JSON.parse(savedLinks));
-  }, [isDataModalOpen, isEducationModalOpen, isWorkModalOpen, isSkillsModalOpen, isLinksModalOpen]); // Refresh when modal closes
+  }, [isPersonalInfoOpen, isAdditionalInfoOpen, isEducationModalOpen, isWorkModalOpen, isSkillsModalOpen, isLinksModalOpen]); // Refresh when modal closes
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -49,32 +53,58 @@ function AddEdit() {
         {/* Personal Info Section */}
         <section>
           <h2 className="text-2xl font-bold mb-4">Personal Information</h2>
-          {cvData ? (
+          {personalInfo ? (
             <div className="bg-white shadow-md rounded p-6">
-              <p><strong>Name:</strong> {cvData.firstName} {cvData.lastName}</p>
-              <p><strong>Email:</strong> {cvData.email}</p>
-              <p><strong>Phone:</strong> {cvData.phone}</p>
-              <p><strong>Address:</strong> {cvData.address}</p>
-              <p><strong>Location:</strong> {cvData.location}</p>
-              <p><strong>Date of Birth:</strong> {cvData.dateOfBirth}</p>
-              <p><strong>Eligible To Work In The Uk:</strong> {cvData.eligibleToWorkInUk ? 'Yes' : 'No'}</p>
-              <p><strong>Driving License:</strong> {cvData.hasDrivingLicense ? 'Yes' : 'No'}</p>
-              <p className="mt-4"><strong>Summary:</strong> {cvData.summary}</p>
+              <p><strong>Name:</strong> {personalInfo.firstName} {personalInfo.lastName}</p>
+              <p><strong>Email:</strong> {personalInfo.email}</p>
+              <p><strong>Phone:</strong> {personalInfo.phone}</p>
+              <p><strong>Address:</strong> {personalInfo.address}</p>
+              <p><strong>City:</strong> {personalInfo.city}</p>
+              <p><strong>Country:</strong> {personalInfo.country}</p>
               <button
-                onClick={() => setIsDataModalOpen(true)}
+                onClick={() => setIsPersonalInfoOpen(true)}
                 className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
-                Edit Info
+                Edit Personal Info
               </button>
             </div>
           ) : (
             <div className="text-center">
               <p className="text-gray-600 mb-4">No personal info found. Start building your CV!</p>
               <button
-                onClick={() => setIsDataModalOpen(true)}
+                onClick={() => setIsPersonalInfoOpen(true)}
                 className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700"
               >
                 Add Personal Info
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* Additional Info Section */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Additional Information</h2>
+          {additionalInfo ? (
+            <div className="bg-white shadow-md rounded p-6">
+              <p><strong>Date of Birth:</strong> {additionalInfo.dateOfBirth}</p>
+              <p><strong>Eligible To Work In The Uk:</strong> {additionalInfo.eligibleToWorkInUk ? 'Yes' : 'No'}</p>
+              <p><strong>Driving License:</strong> {additionalInfo.hasDrivingLicense ? 'Yes' : 'No'}</p>
+              <p className="mt-4"><strong>Summary:</strong> {additionalInfo.summary}</p>
+              <button
+                onClick={() => setIsAdditionalInfoOpen(true)}
+                className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Edit Additional Info
+              </button>
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">No additional info found. Add them here!</p>
+              <button
+                onClick={() => setIsAdditionalInfoOpen(true)}
+                className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700"
+              >
+                Add Additional Information
               </button>
             </div>
           )}
@@ -137,7 +167,6 @@ function AddEdit() {
             </div>
           )}
         </section>
-
 
         {/* Work Experience Section */}
         <section>
@@ -313,8 +342,12 @@ function AddEdit() {
       </main>
 
       {/* Modals */}
-      <Modal isOpen={isDataModalOpen} onClose={() => setIsDataModalOpen(false)}>
-        <DataManager onClose={() => setIsDataModalOpen(false)} />
+      <Modal isOpen={isPersonalInfoOpen} onClose={() => setIsPersonalInfoOpen(false)}>
+        <PersonalInfoManager onClose={() => setIsPersonalInfoOpen(false)} />
+      </Modal>
+
+      <Modal isOpen={isAdditionalInfoOpen} onClose={() => setIsAdditionalInfoOpen(false)}>
+        <AdditionalInfoManager onClose={() => setIsAdditionalInfoOpen(false)} />
       </Modal>
 
       <Modal isOpen={isEducationModalOpen} onClose={() => {

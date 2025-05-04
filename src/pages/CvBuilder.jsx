@@ -42,7 +42,6 @@ import {
 function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
-  const [addedSections, setAddedSections] = useState(new Set());
 
   // Setup sensors
 const sensors = useSensors(
@@ -69,12 +68,13 @@ const sensors = useSensors(
   };
 
   useEffect(() => {
-    const personal = JSON.parse(localStorage.getItem('cvData')) || {};
+    const personal = JSON.parse(localStorage.getItem('personalInfo')) || {};
+    const additional = JSON.parse(localStorage.getItem('additionalInfo')) || {};
     const education = JSON.parse(localStorage.getItem('education')) || [];
     const work = JSON.parse(localStorage.getItem('workExperience')) || [];
     const skills = JSON.parse(localStorage.getItem('skills')) || [];
     const links = JSON.parse(localStorage.getItem('links')) || [];
-    setCvData({ personal, education, work, skills, links });
+    setCvData({ personal, additional, education, work, skills, links });
   }, []);
 
   const toggleItem = (type, item) => {
@@ -99,21 +99,21 @@ const sensors = useSensors(
       <aside className="w-1/3 p-4 bg-gray-200 border-r space-y-4 text-sm overflow-y-auto">
         <h2 className="font-semibold">CV Elements</h2>
 
-        {/* <div>
-          <label className="block font-medium">Personal Info</label>
-          {Object.keys(cvData.personal || {}).map((key) => (
+        <div>
+          <label className="block font-medium">Additional Info</label>
+          {Object.keys(cvData.additional || {}).map((key) => (
             <div key={key}>
               <label>
                 <input
                   type="checkbox"
-                  onChange={() => toggleItem('personal', { key, value: cvData.personal[key] })}
-                  checked={selectedItems.some(i => i.type === 'personal' && i.item.key === key)}
+                  onChange={() => toggleItem('additional', { key, value: cvData.additional[key] })}
+                  checked={selectedItems.some(i => i.type === 'additional' && i.item.key === key)}
                 />
-                <span className="ml-2">{key}: {cvData.personal[key]}</span>
+                <span className="ml-2">{key}: {cvData.additional[key]}</span>
               </label>
             </div>
           ))}
-        </div> */}
+        </div>
 
         <div>
           <label className="block font-medium">Education</label>
@@ -197,7 +197,7 @@ const sensors = useSensors(
             </>
           )}
 
-          {['education', 'work', 'skills', 'links'].map((sectionKey) =>
+          {['additional', 'education', 'work', 'skills', 'links'].map((sectionKey) =>
             groupedItems[sectionKey]?.length ? (
               <div key={sectionKey} className="mt-6">
                 <h3 className="text-xl text-sky-600 font-medium mb-4 capitalize">{sectionKey}</h3>
@@ -213,6 +213,9 @@ const sensors = useSensors(
                     {groupedItems[sectionKey].map((entry) => (
                       <SortableItem key={entry.id} id={entry.id}>
                         <div className="hover:shadow hover:bg-gray-100 rounded p-2">
+                          {entry.type === 'additional' && (
+                              <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
+                          )}
                           {entry.type === 'education' && (
                             <div>
                               <h3 className="font-semibold">{entry.item.degree} in {entry.item.field}</h3>
