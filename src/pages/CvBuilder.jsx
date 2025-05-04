@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -15,7 +15,11 @@ import {
     verticalListSortingStrategy
   } from '@dnd-kit/sortable';
   import { CSS } from '@dnd-kit/utilities';
+
+  import { useReactToPrint } from 'react-to-print';
+
   
+
   function SortableItem({ id, children }) {
     const {
       attributes,
@@ -92,6 +96,12 @@ const sensors = useSensors(
     acc[item.type].push(item);
     return acc;
   }, {});
+
+  const contentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => contentRef.current,
+  });
 
   return (
     <div className="flex min-h-screen gap-6">
@@ -181,7 +191,7 @@ const sensors = useSensors(
       </aside>
 
       {/* Preview Area */}
-      <section className="flex-1 bg-white p-6 rounded-lg shadow-inner">
+      <section ref={contentRef} className="flex-1 bg-white p-6 rounded-lg shadow-inner">
           {cvData.personal && (
             <>
               <h2 className="text-2xl font-bold mb-4">
@@ -250,6 +260,16 @@ const sensors = useSensors(
             ) : null
           )}
         </section>
+        <div>
+                <button
+                  onClick={handlePrint}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  Print / Save PDF
+                </button>
+        </div>
+
+       
 
     </div>
   );
