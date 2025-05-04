@@ -104,7 +104,7 @@ const sensors = useSensors(
   return (
     <div className="flex min-h-screen gap-6">
       {/* Sidebar */}
-      <aside className="w-1/3 p-4 bg-gray-200 border-r space-y-4 text-sm overflow-y-auto">
+      <aside className="w-1/4 p-4 bg-gray-200 border-r space-y-4 text-sm overflow-y-auto">
         <h2 className="font-semibold">CV Elements</h2>
 
         <div>
@@ -208,7 +208,7 @@ const sensors = useSensors(
           {['additional', 'education', 'work', 'skills', 'links'].map((sectionKey) =>
             groupedItems[sectionKey]?.length ? (
               <div key={sectionKey} className="mt-6">
-                <h3 className="text-xl text-sky-600 font-medium mb-4 capitalize">{sectionKey}</h3>
+                <h3 className="text-xl text-sky-600 font-medium mb-2 capitalize">{sectionKey}</h3>
                 <DndContext
                   sensors={sensors}
                   collisionDetection={closestCenter}
@@ -220,7 +220,7 @@ const sensors = useSensors(
                   >
                     {groupedItems[sectionKey].map((entry) => (
                       <SortableItem key={entry.id} id={entry.id}>
-                        <div className="hover:shadow hover:bg-gray-100 rounded p-2">
+                        <div className="hover:shadow hover:bg-gray-100 rounded p-1 pl-2">
                           {entry.type === 'additional' && (
                               <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
                           )}
@@ -263,7 +263,7 @@ const sensors = useSensors(
                   onClick={handlePrint}
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
-                  Print / Save PDF
+                  PDF
                 </button>
         </div>
 

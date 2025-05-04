@@ -10,7 +10,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <main className="p-6 max-w-4xl mx-auto">
+        <main className="p-6 max-w-6xl mx-auto">
           <Routes>
             <Route path="/" element={<AddEdit />} />
             <Route path="/cv-builder" element={<CvBuilder />} />
