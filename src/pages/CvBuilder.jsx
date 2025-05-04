@@ -98,10 +98,8 @@ const sensors = useSensors(
   }, {});
 
   const contentRef = useRef();
-
-  const handlePrint = useReactToPrint({
-    content: () => contentRef.current,
-  });
+  const handlePrint = useReactToPrint({ contentRef }); 
+  
 
   return (
     <div className="flex min-h-screen gap-6">
