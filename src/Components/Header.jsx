@@ -9,8 +9,11 @@ const Header = () => {
         <Link to="/" className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
           Login
         </Link>
+        <Link to="/" className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded">
+          CV Editor
+        </Link>
         <Link to="/cv-builder" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-          Go to CV Builder
+          CV Builder
         </Link>
       </div>
     </header>
