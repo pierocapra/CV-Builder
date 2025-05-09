@@ -252,17 +252,17 @@ function CvBuilder() {
       {/* Options Area */}
       <div className="flex flex-col gap-2 mb-4 mt-4">
         <h4 className="font-bold underline underline-offset-6">TEMPLATES</h4>
-        <button onClick={() => setTemplate('minimal')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Minimal</button>
-        <button onClick={() => setTemplate('elegant')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Elegant</button>
-        <button onClick={() => setTemplate('modern')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Modern</button>
-        <button onClick={() => setTemplate('compact')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Compact</button>
-        <button onClick={() => setTemplate('creative')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Creative</button>
-        <button onClick={() => setTemplate('bold')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Bold</button>
+        <button onClick={() => setTemplate('minimal')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'minimal' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Minimal</button>
+        <button onClick={() => setTemplate('elegant')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'elegant' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Elegant</button>
+        <button onClick={() => setTemplate('modern')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'modern' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Modern</button>
+        <button onClick={() => setTemplate('compact')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'compact' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Compact</button>
+        <button onClick={() => setTemplate('creative')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'creative' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Creative</button>
+        <button onClick={() => setTemplate('bold')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'bold' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Bold</button>
         <h4 className="font-bold underline underline-offset-6">COLORS</h4>
-        <button onClick={() => setColor('sky')} className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700">Sky</button>
-        <button onClick={() => setColor('teal')} className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">Teal</button>
-        <button onClick={() => setColor('red')} className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500">Coral</button>
-        <button onClick={() => setColor('cyan')} className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700">Cyan</button>
+        <button onClick={() => setColor('sky')} className={`bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 ${color === 'sky' ?'outline-1 outline-sky-700 shadow-md/50' :'' }`}>Sky</button>
+        <button onClick={() => setColor('teal')} className={`bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 ${color === 'teal' ?'outline-1 outline-teal-700 shadow-md/50' :'' }`}>Teal</button>
+        <button onClick={() => setColor('red')} className={`bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500 ${color === 'red' ?'outline-1 outline-red-700 shadow-md/50' :'' }`}>Coral</button>
+        <button onClick={() => setColor('cyan')} className={`bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700 ${color === 'cyan' ?'outline-1 outline-cyan-700 shadow-md/50' :'' }`}>Cyan</button>
         <h4 className="font-bold underline underline-offset-6">FORMAT</h4>
         <button
           onClick={handlePrint}

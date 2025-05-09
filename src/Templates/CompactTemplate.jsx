@@ -21,7 +21,7 @@ import {
       <div className="bg-white p-6 font-sans text-gray-900 text-sm">
         {/* Header */}
         {cvData.personal && (
-          <header className="mb-6 border-b pb-2">
+          <header className="mb-6 pb-2">
             <h1 className="text-2xl font-bold">
               {cvData.personal.firstName} {cvData.personal.lastName}
             </h1>
@@ -50,7 +50,8 @@ import {
                         <ul className="space-y-1">
                           {groupedItems[sectionKey].map((entry) => (
                             <SortableItem key={entry.id} id={entry.id}>
-                              <li className="pl-2 border-l-2 border-gray-200 hover:bg-gray-50 rounded">
+                              <li className="relative pl-4 rounded">
+                              <span className="absolute left-0 top-2.5 -translate-y-1/2 w-1 h-1 bg-gray-400 rounded-full"></span>
                                 {entry.type === 'education' && (
                                   <div>
                                     <p className="font-semibold">{entry.item.degree}</p>

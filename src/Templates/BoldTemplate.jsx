@@ -11,24 +11,24 @@ import {
   
   const BoldTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headerClasses = {
-      sky: 'bg-sky-700 text-white',
-      teal: 'bg-teal-700 text-white',
-      red: 'bg-red-700 text-white',
-      cyan: 'bg-cyan-700 text-white',
+      sky: 'bg-sky-600 text-white',
+      teal: 'bg-teal-600 text-white',
+      red: 'bg-red-500 text-white',
+      cyan: 'bg-cyan-600 text-white',
     };
   
     const sectionClasses = {
       sky: 'border-t-4 border-sky-600',
       teal: 'border-t-4 border-teal-600',
-      red: 'border-t-4 border-red-600',
+      red: 'border-t-4 border-red-500',
       cyan: 'border-t-4 border-cyan-600',
     };
   
     const textClasses = {
-      sky: 'text-sky-800',
-      teal: 'text-teal-800',
-      red: 'text-red-800',
-      cyan: 'text-cyan-800',
+      sky: 'text-sky-600',
+      teal: 'text-teal-600',
+      red: 'text-red-500',
+      cyan: 'text-cyan-600',
     };
   
     return (
@@ -44,7 +44,7 @@ import {
               {Object.entries(cvData.personal)
                 .filter(([key]) => key !== 'firstName' && key !== 'lastName')
                 .map(([key, value]) => (
-                  <p key={key}><strong>{key}:</strong> {value}</p>
+                  <p key={key}><strong className="capitalize">{key}:</strong> {value}</p>
                 ))}
             </div>
           </header>

@@ -29,7 +29,7 @@ import {
               {Object.entries(cvData.personal)
                 .filter(([key]) => key !== 'firstName' && key !== 'lastName')
                 .map(([key, value]) => (
-                  <p key={key}><strong>{key}:</strong> {value}</p>
+                  <p key={key}><strong className="capitalize">{key}:</strong> {value}</p>
                 ))}
             </div>
           </header>
@@ -41,7 +41,7 @@ import {
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-6 group hover:bg-gray-50 rounded p-2 transition">
+                  <div className="mb-6 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded p-2 transition">
                     <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2 capitalize`}>
                       {sectionKey}
                     </h2>
@@ -50,7 +50,7 @@ import {
                         <div className="space-y-2">
                           {groupedItems[sectionKey].map((entry) => (
                             <SortableItem key={entry.id} id={entry.id}>
-                              <div className="px-3 py-2 bg-white border-l-2 border-gray-300 hover:shadow-sm transition">
+                              <div className="px-3 py-2 bg-white border-l-2 border-gray-300 hover:shadow-sm hover:bg-gray-50 transition">
                                 {entry.type === 'education' && (
                                   <div>
                                     <p className="font-semibold">{entry.item.degree} in {entry.item.field}</p>
