@@ -1,44 +1,16 @@
-import React from 'react';
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+    DndContext,
+    closestCenter,
+  } from '@dnd-kit/core';
+  import {
+    SortableContext,
+    verticalListSortingStrategy
+  } from '@dnd-kit/sortable';
+  ;
+import { SortableItem } from "../Utils/DndUtils.jsx";
+import { SortableSection } from "../Utils/DndUtils.jsx";
 
-function SortableItem({ id, children }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    cursor: 'grab',
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  );
-}
-
-const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
+const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder }) => {
   return (
     <div className="bg-white p-8 text-gray-800">
       {/* Header */}
@@ -60,9 +32,20 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
       )}
 
       {/* CV Sections */}
-      {['education', 'work', 'skills', 'additional', 'links'].map((sectionKey) =>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleSectionDragEnd}
+        >
+        <SortableContext
+            items={sectionOrder}
+            strategy={verticalListSortingStrategy}
+        >
+
+            {sectionOrder.map((sectionKey) =>
         groupedItems[sectionKey]?.length ? (
-          <div key={sectionKey} className="mb-8">
+            <SortableSection key={sectionKey} id={sectionKey}>
+          <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
             <h2 className="text-xl font-semibold text-sky-700 mb-3 capitalize">{sectionKey}</h2>
             <DndContext
               sensors={sensors}
@@ -113,9 +96,10 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
               </SortableContext>
             </DndContext>
           </div>
-        ) : null
-      )}
-    </div>
+        </SortableSection>) : null)}
+    </SortableContext>
+        </DndContext>
+                </div>
   );
 };
 

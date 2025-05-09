@@ -1,73 +1,58 @@
 import {
     DndContext,
     closestCenter,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors
   } from '@dnd-kit/core';
   import {
-    arrayMove,
     SortableContext,
-    sortableKeyboardCoordinates,
-    useSortable,
     verticalListSortingStrategy
   } from '@dnd-kit/sortable';
-  import { CSS } from '@dnd-kit/utilities';
+  ;
+import { SortableItem } from "../Utils/DndUtils.jsx";
+import { SortableSection } from "../Utils/DndUtils.jsx";
 
-    function SortableItem({ id, children }) {
-      const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-      } = useSortable({ id });
-    
-      const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        cursor: 'grab',
-      };
-    
-      return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-          {children}
-        </div>
-      );
-    }
-
-const DefaultTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
-    return (
+const DefaultTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder}) => { 
+  return (
     <div className="bg-white p-6">
-          {cvData.personal && (
-            <>
-              <h2 className="text-2xl font-bold mb-4">
-                {cvData.personal.firstName} {cvData.personal.lastName}
-              </h2>
-              {Object.entries(cvData.personal)
-                .filter(([key]) => key !== 'firstName' && key !== 'lastName')
-                .map(([key, value]) => (
-                  <p key={key}>
-                    <strong>{key}:</strong> {value}
-                  </p>
-                ))}
-            </>
-          )}
+      {/* Header */}
+      {cvData.personal && (
+          <>
+            <h2 className="text-2xl font-bold mb-4">
+              {cvData.personal.firstName} {cvData.personal.lastName}
+            </h2>
+            {Object.entries(cvData.personal)
+              .filter(([key]) => key !== 'firstName' && key !== 'lastName')
+              .map(([key, value]) => (
+                <p key={key}>
+                  <strong>{key}:</strong> {value}
+                </p>
+              ))}
+          </>
+      )}
 
-          {['additional', 'education', 'work', 'skills', 'links'].map((sectionKey) =>
-            groupedItems[sectionKey]?.length ? (
-              <div key={sectionKey} className="mt-6">
-                <h3 className="text-xl text-sky-600 font-medium mb-2 capitalize">{sectionKey}</h3>
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={(event) => handleDragEnd(event, sectionKey)} // adjust per section
-                >
-                  <SortableContext
+      {/* CV Sections */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleSectionDragEnd}
+      >
+        <SortableContext
+          items={sectionOrder}
+          strategy={verticalListSortingStrategy}
+        >
+
+          {sectionOrder.map((sectionKey) => groupedItems[sectionKey]?.length ? (
+          <SortableSection key={sectionKey} id={sectionKey}>
+            <div className="mt-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
+              <h3 className="text-xl text-sky-600 font-medium mb-2 capitalize">{sectionKey}</h3>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleDragEnd(event, sectionKey)} // adjust per section
+              >
+                <SortableContext
                     items={groupedItems[sectionKey].map((item) => item.id)}
                     strategy={verticalListSortingStrategy}
-                  >
+                >
                     {groupedItems[sectionKey].map((entry) => (
                       <SortableItem key={entry.id} id={entry.id}>
                         <div className="hover:shadow hover:bg-gray-100 rounded p-1 pl-2">
@@ -102,13 +87,16 @@ const DefaultTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
                         </div>
                       </SortableItem>
                     ))}
-                  </SortableContext>
-                </DndContext>
-              </div>
-            ) : null
-          )}
-        </div>
-    )
+                </SortableContext>
+              </DndContext>
+            </div>
+
+          </SortableSection>) : null)}
+
+        </SortableContext>
+      </DndContext>
+    </div>
+  )
 }
 
 export default DefaultTemplate

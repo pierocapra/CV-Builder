@@ -1,47 +1,19 @@
-import React from 'react';
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+    DndContext,
+    closestCenter,
+  } from '@dnd-kit/core';
+  import {
+    SortableContext,
+    verticalListSortingStrategy
+  } from '@dnd-kit/sortable';
+  ;
+import { SortableItem } from "../Utils/DndUtils.jsx";
+import { SortableSection } from "../Utils/DndUtils.jsx";
 
-// Reusable draggable item
-function SortableItem({ id, children }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    cursor: 'grab',
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  );
-}
-
-const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
+const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder}) => {
   return (
     <div className="bg-white p-10 font-serif text-gray-800 leading-relaxed">
+        {/* Header */}
       {cvData.personal && (
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold uppercase tracking-wide">
@@ -57,10 +29,22 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
         </header>
       )}
 
-      {['additional', 'education', 'work', 'skills', 'links'].map((sectionKey) =>
+      {/* CV Sections */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleSectionDragEnd}
+        >
+        <SortableContext
+            items={sectionOrder}
+            strategy={verticalListSortingStrategy}
+        >
+
+            {sectionOrder.map((sectionKey) =>
         groupedItems[sectionKey]?.length ? (
-          <section key={sectionKey} className="mb-10">
-            <h2 className="text-2xl border-b pb-1 mb-4 text-indigo-700 font-semibold capitalize">
+            <SortableSection key={sectionKey} id={sectionKey}>
+          <div className="mb-10">
+            <h2 className="text-2xl border-b pb-1 mb-4 text-teal-700 font-semibold capitalize">
               {sectionKey}
             </h2>
             <DndContext
@@ -75,7 +59,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
                 <div className="space-y-4">
                   {groupedItems[sectionKey].map((entry) => (
                     <SortableItem key={entry.id} id={entry.id}>
-                      <div className="border-l-4 border-indigo-500 pl-4 py-2 hover:bg-indigo-50 rounded">
+                      <div className="border-l-4 border-teal-600 pl-4 py-2 hover:bg-indigo-50 rounded">
                         {entry.type === 'additional' && (
                           <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
                         )}
@@ -103,7 +87,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
                               href={entry.item.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-indigo-700 underline"
+                              className="text-teal-700 underline"
                             >
                               {entry.item.label}
                             </a>
@@ -115,9 +99,11 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors }) => {
                 </div>
               </SortableContext>
             </DndContext>
-          </section>
-        ) : null
-      )}
+          </div>
+          </SortableSection>) : null)}
+
+</SortableContext>
+</DndContext>
     </div>
   );
 };

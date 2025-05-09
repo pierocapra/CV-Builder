@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    DndContext,
-    closestCenter,
     KeyboardSensor,
     PointerSensor,
     useSensor,
@@ -9,26 +7,25 @@ import {
   } from '@dnd-kit/core';
   import {
     arrayMove,
-    SortableContext,
     sortableKeyboardCoordinates,
-    useSortable,
-    verticalListSortingStrategy
   } from '@dnd-kit/sortable';
-  import { CSS } from '@dnd-kit/utilities';
 
   import { useReactToPrint } from 'react-to-print';
   import DefaultTemplate from "../Templates/DefaultTemplate";
   import ModernTemplate from "../Templates/ModernTemplate";
-import ElegantTemplate from "../Templates/ElegantTemplate";
+  import ElegantTemplate from "../Templates/ElegantTemplate";
   
 
 function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [template, setTemplate] = useState('default'); 
+  const [sectionOrder, setSectionOrder] = useState([
+    'additional', 'education', 'work', 'skills', 'links'
+  ]);
 
   // Setup sensors
-const sensors = useSensors(
+  const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
@@ -50,6 +47,17 @@ const sensors = useSensors(
       return [...rest, ...reordered];
     });
   };
+
+  const handleSectionDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+  
+    const oldIndex = sectionOrder.findIndex((id) => id === active.id);
+    const newIndex = sectionOrder.findIndex((id) => id === over.id);
+  
+    setSectionOrder((items) => arrayMove(items, oldIndex, newIndex));
+  };
+  
 
   useEffect(() => {
     const personal = JSON.parse(localStorage.getItem('personalInfo')) || {};
@@ -176,6 +184,8 @@ const sensors = useSensors(
             groupedItems={groupedItems}
             sensors={sensors}
             handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
           />
         )}
         {template === 'modern' && (
@@ -184,13 +194,18 @@ const sensors = useSensors(
             groupedItems={groupedItems}
             sensors={sensors}
             handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
           />
         )}
         {template === 'elegant' && (
-          <ElegantTemplate  cvData={cvData}
+          <ElegantTemplate  
+            cvData={cvData}
             groupedItems={groupedItems}
             sensors={sensors}
             handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
           />      
         )}
       </section>
