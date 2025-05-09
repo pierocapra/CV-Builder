@@ -17,35 +17,15 @@ import {
   import { CSS } from '@dnd-kit/utilities';
 
   import { useReactToPrint } from 'react-to-print';
-
-  
-
-  function SortableItem({ id, children }) {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-    } = useSortable({ id });
-  
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-      cursor: 'grab',
-    };
-  
-    return (
-      <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        {children}
-      </div>
-    );
-  }
+  import DefaultTemplate from "../Templates/DefaultTemplate";
+  import ModernTemplate from "../Templates/ModernTemplate";
+import ElegantTemplate from "../Templates/ElegantTemplate";
   
 
 function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
+  const [template, setTemplate] = useState('default'); 
 
   // Setup sensors
 const sensors = useSensors(
@@ -189,86 +169,43 @@ const sensors = useSensors(
       </aside>
 
       {/* Preview Area */}
-      <section ref={contentRef} className="flex-1 bg-white p-6 rounded-lg shadow-inner">
-          {cvData.personal && (
-            <>
-              <h2 className="text-2xl font-bold mb-4">
-                {cvData.personal.firstName} {cvData.personal.lastName}
-              </h2>
-              {Object.entries(cvData.personal)
-                .filter(([key]) => key !== 'firstName' && key !== 'lastName')
-                .map(([key, value]) => (
-                  <p key={key}>
-                    <strong>{key}:</strong> {value}
-                  </p>
-                ))}
-            </>
-          )}
-
-          {['additional', 'education', 'work', 'skills', 'links'].map((sectionKey) =>
-            groupedItems[sectionKey]?.length ? (
-              <div key={sectionKey} className="mt-6">
-                <h3 className="text-xl text-sky-600 font-medium mb-2 capitalize">{sectionKey}</h3>
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={(event) => handleDragEnd(event, sectionKey)} // adjust per section
-                >
-                  <SortableContext
-                    items={groupedItems[sectionKey].map((item) => item.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {groupedItems[sectionKey].map((entry) => (
-                      <SortableItem key={entry.id} id={entry.id}>
-                        <div className="hover:shadow hover:bg-gray-100 rounded p-1 pl-2">
-                          {entry.type === 'additional' && (
-                              <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
-                          )}
-                          {entry.type === 'education' && (
-                            <div>
-                              <h3 className="font-semibold">{entry.item.degree} in {entry.item.field}</h3>
-                              <p>{entry.item.school}, {entry.item.location}</p>
-                              <p>{entry.item.startDate} – {entry.item.endDate}</p>
-                            </div>
-                          )}
-                          {entry.type === 'work' && (
-                            <div>
-                              <h3 className="font-semibold">{entry.item.title}</h3>
-                              <p>{entry.item.company}, {entry.item.location}</p>
-                              <p>{entry.item.startDate} – {entry.item.endDate}</p>
-                              <p>{entry.item.description}</p>
-                            </div>
-                          )}
-                          {entry.type === 'skills' && (
-                            <p>{entry.item.name} ({entry.item.level})</p>
-                          )}
-                          {entry.type === 'links' && (
-                            <p>
-                              <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                                {entry.item.label}
-                              </a>
-                            </p>
-                          )}
-                        </div>
-                      </SortableItem>
-                    ))}
-                  </SortableContext>
-                </DndContext>
-              </div>
-            ) : null
-          )}
-        </section>
-        <div>
-                <button
-                  onClick={handlePrint}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                  PDF
-                </button>
-        </div>
-
-       
-
+      <section ref={contentRef} className="flex-1">
+        {template === 'default' && (
+          <DefaultTemplate
+            cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+          />
+        )}
+        {template === 'modern' && (
+          <ModernTemplate
+            cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+          />
+        )}
+        {template === 'elegant' && (
+          <ElegantTemplate  cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+          />      
+        )}
+      </section>
+      {/* Options Area */}
+      <div className="flex flex-col gap-2 mb-4 mt-4">
+              <button
+                onClick={handlePrint}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                PDF
+              </button>
+              <button onClick={() => setTemplate('default')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Default</button>
+              <button onClick={() => setTemplate('modern')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Modern</button>
+              <button onClick={() => setTemplate('elegant')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Elegant</button>
+      </div>
     </div>
   );
 }
