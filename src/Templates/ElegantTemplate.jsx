@@ -10,7 +10,20 @@ import {
 import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
 
-const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder}) => {
+const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder, color}) => {
+  const textClasses = {
+    sky: 'text-sky-600',
+    teal: 'text-teal-600',
+    orange: 'text-orange-600',
+    cyan: 'text-cyan-600',
+  };
+  const borderClasses = {
+    sky: 'border-sky-600',
+    teal: 'border-teal-600',
+    orange: 'border-orange-600',
+    cyan: 'border-cyan-600',
+  }
+
   return (
     <div className="bg-white p-10 font-serif text-gray-800 leading-relaxed">
         {/* Header */}
@@ -43,8 +56,8 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
             {sectionOrder.map((sectionKey) =>
         groupedItems[sectionKey]?.length ? (
             <SortableSection key={sectionKey} id={sectionKey}>
-          <div className="mb-10">
-            <h2 className="text-2xl border-b pb-1 mb-4 text-teal-700 font-semibold capitalize">
+          <div className="mb-10 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+            <h2 className={`text-2xl border-b pb-1 mb-4 ${textClasses[color]} font-semibold capitalize`}>
               {sectionKey}
             </h2>
             <DndContext
@@ -59,7 +72,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                 <div className="space-y-4">
                   {groupedItems[sectionKey].map((entry) => (
                     <SortableItem key={entry.id} id={entry.id}>
-                      <div className="border-l-4 border-teal-600 pl-4 py-2 hover:bg-indigo-50 rounded">
+                      <div className={`border-l-4 ${borderClasses[color]}  pl-4 py-2 hover:bg-indigo-50 rounded`}>
                         {entry.type === 'additional' && (
                           <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
                         )}
@@ -87,7 +100,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                               href={entry.item.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-teal-700 underline"
+                              className={`${textClasses[color]}  underline`}
                             >
                               {entry.item.label}
                             </a>

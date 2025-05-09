@@ -10,7 +10,23 @@ import {
 import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
 
-const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder }) => {
+const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
+  const textClasses = {
+    sky: 'text-sky-700',
+    teal: 'text-teal-700',
+    orange: 'text-orange-700',
+    cyan: 'text-cyan-700',
+  };
+
+  const dashClasses = {
+    sky: 'bg-sky-500',
+    teal: 'bg-teal-500',
+    orange: 'bg-orange-500',
+    cyan: 'bg-cyan-500',
+  };
+
+  
+
   return (
     <div className="bg-white p-8 text-gray-800">
       {/* Header */}
@@ -45,8 +61,8 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
             {sectionOrder.map((sectionKey) =>
         groupedItems[sectionKey]?.length ? (
             <SortableSection key={sectionKey} id={sectionKey}>
-          <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
-            <h2 className="text-xl font-semibold text-sky-700 mb-3 capitalize">{sectionKey}</h2>
+          <div className="mb-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
+            <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3 capitalize`}>{sectionKey}</h2>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -58,7 +74,8 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
               >
                 {groupedItems[sectionKey].map((entry) => (
                   <SortableItem key={entry.id} id={entry.id}>
-                    <div className="border p-4 rounded-md mb-3 hover:shadow-sm transition">
+                    <div className="relative pb-4 mb-1 mt-1 hover:bg-gray-50 transition">
+                    <div className={`absolute bottom-0 w-6 h-0.25 ${dashClasses[color]} rounded`}></div>
                       {entry.type === 'education' && (
                         <>
                           <h3 className="font-medium">{entry.item.degree} in {entry.item.field}</h3>

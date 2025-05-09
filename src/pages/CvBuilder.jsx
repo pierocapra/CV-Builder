@@ -20,8 +20,9 @@ function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [template, setTemplate] = useState('default'); 
+  const [color,setColor] = useState('sky'); 
   const [sectionOrder, setSectionOrder] = useState([
-    'additional', 'education', 'work', 'skills', 'links'
+     'education', 'work', 'skills', 'links','additional'
   ]);
 
   // Setup sensors
@@ -186,6 +187,7 @@ function CvBuilder() {
             handleDragEnd={handleDragEnd}
             handleSectionDragEnd={handleSectionDragEnd}
             sectionOrder={sectionOrder}
+            color={color}
           />
         )}
         {template === 'modern' && (
@@ -196,6 +198,7 @@ function CvBuilder() {
             handleDragEnd={handleDragEnd}
             handleSectionDragEnd={handleSectionDragEnd}
             sectionOrder={sectionOrder}
+            color={color}
           />
         )}
         {template === 'elegant' && (
@@ -206,20 +209,28 @@ function CvBuilder() {
             handleDragEnd={handleDragEnd}
             handleSectionDragEnd={handleSectionDragEnd}
             sectionOrder={sectionOrder}
+            color={color}
           />      
         )}
       </section>
       {/* Options Area */}
       <div className="flex flex-col gap-2 mb-4 mt-4">
-              <button
-                onClick={handlePrint}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                PDF
-              </button>
-              <button onClick={() => setTemplate('default')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Default</button>
-              <button onClick={() => setTemplate('modern')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Modern</button>
-              <button onClick={() => setTemplate('elegant')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Elegant</button>
+        <h4 className="font-bold underline underline-offset-6">TEMPLATES</h4>
+        <button onClick={() => setTemplate('default')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Default</button>
+        <button onClick={() => setTemplate('modern')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Modern</button>
+        <button onClick={() => setTemplate('elegant')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Elegant</button>
+        <h4 className="font-bold underline underline-offset-6">COLORS</h4>
+        <button onClick={() => setColor('sky')} className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700">Sky</button>
+        <button onClick={() => setColor('teal')} className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">Teal</button>
+        <button onClick={() => setColor('orange')} className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">Orange</button>
+        <button onClick={() => setColor('cyan')} className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700">Cyan</button>
+        <h4 className="font-bold underline underline-offset-6">FORMAT</h4>
+        <button
+          onClick={handlePrint}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          PDF
+        </button>
       </div>
     </div>
   );

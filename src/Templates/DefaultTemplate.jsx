@@ -10,7 +10,15 @@ import {
 import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
 
-const DefaultTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder}) => { 
+const DefaultTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color}) => { 
+
+  const textClasses = {
+    sky: 'text-sky-600',
+    teal: 'text-teal-600',
+    orange: 'text-orange-600',
+    cyan: 'text-cyan-600',
+  };
+
   return (
     <div className="bg-white p-6">
       {/* Header */}
@@ -42,8 +50,8 @@ const DefaultTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
 
           {sectionOrder.map((sectionKey) => groupedItems[sectionKey]?.length ? (
           <SortableSection key={sectionKey} id={sectionKey}>
-            <div className="mt-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
-              <h3 className="text-xl text-sky-600 font-medium mb-2 capitalize">{sectionKey}</h3>
+            <div className="mt-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+              <h3 className={`text-xl ${textClasses[color]} font-medium mb-2 capitalize`}>{sectionKey}</h3>
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
