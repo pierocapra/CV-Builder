@@ -14,13 +14,13 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
   const textClasses = {
     sky: 'text-sky-600',
     teal: 'text-teal-600',
-    orange: 'text-orange-600',
+    red: 'text-red-400',
     cyan: 'text-cyan-600',
   };
   const borderClasses = {
     sky: 'border-sky-600',
     teal: 'border-teal-600',
-    orange: 'border-orange-600',
+    red: 'border-red-400',
     cyan: 'border-cyan-600',
   }
 

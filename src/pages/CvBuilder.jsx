@@ -11,15 +11,18 @@ import {
   } from '@dnd-kit/sortable';
 
   import { useReactToPrint } from 'react-to-print';
-  import DefaultTemplate from "../Templates/DefaultTemplate";
   import ModernTemplate from "../Templates/ModernTemplate";
   import ElegantTemplate from "../Templates/ElegantTemplate";
+  import MinimalTemplate from "../Templates/MinimalTemplate";
+  import CompactTemplate from "../Templates/CompactTemplate";
+  import CreativeTemplate from "../Templates/CreativeTemplate";
+  import BoldTemplate from "../Templates/BoldTemplate";
   
 
 function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
-  const [template, setTemplate] = useState('default'); 
+  const [template, setTemplate] = useState('minimal'); 
   const [color,setColor] = useState('sky'); 
   const [sectionOrder, setSectionOrder] = useState([
      'education', 'work', 'skills', 'links','additional'
@@ -179,17 +182,6 @@ function CvBuilder() {
 
       {/* Preview Area */}
       <section ref={contentRef} className="flex-1">
-        {template === 'default' && (
-          <DefaultTemplate
-            cvData={cvData}
-            groupedItems={groupedItems}
-            sensors={sensors}
-            handleDragEnd={handleDragEnd}
-            handleSectionDragEnd={handleSectionDragEnd}
-            sectionOrder={sectionOrder}
-            color={color}
-          />
-        )}
         {template === 'modern' && (
           <ModernTemplate
             cvData={cvData}
@@ -212,17 +204,64 @@ function CvBuilder() {
             color={color}
           />      
         )}
+        {template === 'minimal' && (
+          <MinimalTemplate  
+            cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
+            color={color}
+          />      
+        )}
+        {template === 'compact' && (
+        <CompactTemplate 
+            cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
+            color={color} 
+          />
+        )}
+        {template === 'creative' && (
+          <CreativeTemplate 
+            cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
+            color={color} 
+          />
+        )}
+        {template === 'bold' && (
+          <BoldTemplate 
+            cvData={cvData}
+            groupedItems={groupedItems}
+            sensors={sensors}
+            handleDragEnd={handleDragEnd}
+            handleSectionDragEnd={handleSectionDragEnd}
+            sectionOrder={sectionOrder}
+            color={color} 
+          />
+        )}
       </section>
       {/* Options Area */}
       <div className="flex flex-col gap-2 mb-4 mt-4">
         <h4 className="font-bold underline underline-offset-6">TEMPLATES</h4>
-        <button onClick={() => setTemplate('default')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Default</button>
-        <button onClick={() => setTemplate('modern')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Modern</button>
+        <button onClick={() => setTemplate('minimal')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Minimal</button>
         <button onClick={() => setTemplate('elegant')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Elegant</button>
+        <button onClick={() => setTemplate('modern')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Modern</button>
+        <button onClick={() => setTemplate('compact')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Compact</button>
+        <button onClick={() => setTemplate('creative')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Creative</button>
+        <button onClick={() => setTemplate('bold')} className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Bold</button>
         <h4 className="font-bold underline underline-offset-6">COLORS</h4>
         <button onClick={() => setColor('sky')} className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700">Sky</button>
         <button onClick={() => setColor('teal')} className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">Teal</button>
-        <button onClick={() => setColor('orange')} className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">Orange</button>
+        <button onClick={() => setColor('red')} className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500">Coral</button>
         <button onClick={() => setColor('cyan')} className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700">Cyan</button>
         <h4 className="font-bold underline underline-offset-6">FORMAT</h4>
         <button

@@ -14,14 +14,14 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
   const textClasses = {
     sky: 'text-sky-700',
     teal: 'text-teal-700',
-    orange: 'text-orange-700',
+    red: 'text-red-400',
     cyan: 'text-cyan-700',
   };
 
   const dashClasses = {
     sky: 'bg-sky-500',
     teal: 'bg-teal-500',
-    orange: 'bg-orange-500',
+    red: 'bg-red-400',
     cyan: 'bg-cyan-500',
   };
 
@@ -75,7 +75,7 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                 {groupedItems[sectionKey].map((entry) => (
                   <SortableItem key={entry.id} id={entry.id}>
                     <div className="relative pb-4 mb-1 mt-1 hover:bg-gray-50 transition">
-                    <div className={`absolute bottom-0 w-6 h-0.25 ${dashClasses[color]} rounded`}></div>
+
                       {entry.type === 'education' && (
                         <>
                           <h3 className="font-medium">{entry.item.degree} in {entry.item.field}</h3>
