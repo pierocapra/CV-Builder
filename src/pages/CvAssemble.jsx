@@ -19,7 +19,7 @@ import {
   import BoldTemplate from "../Templates/BoldTemplate";
   
 
-function CvBuilder() {
+function CvAssemble() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [template, setTemplate] = useState('minimal'); 
@@ -276,4 +276,4 @@ function CvBuilder() {
   );
 }
 
-export default CvBuilder;
+export default CvAssemble;
