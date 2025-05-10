@@ -12,21 +12,13 @@ import { SortableSection } from "../Utils/DndUtils.jsx";
 
 const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
   const textClasses = {
+    gray: 'text-gray-500',
     sky: 'text-sky-700',
     teal: 'text-teal-700',
     red: 'text-red-400',
     cyan: 'text-cyan-700',
   };
-
-  const dashClasses = {
-    sky: 'bg-sky-500',
-    teal: 'bg-teal-500',
-    red: 'bg-red-400',
-    cyan: 'bg-cyan-500',
-  };
-
   
-
   return (
     <div className="bg-white p-8 text-gray-800">
       {/* Header */}

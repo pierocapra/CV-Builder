@@ -11,6 +11,7 @@ import {
   
   const CompactTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headingClasses = {
+      gray: 'border-b-2 border-gray-500 text-gray-500',
       sky: 'border-b-2 border-sky-500 text-sky-700',
       teal: 'border-b-2 border-teal-500 text-teal-700',
       red: 'border-b-2 border-red-400 text-red-600',

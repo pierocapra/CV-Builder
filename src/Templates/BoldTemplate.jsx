@@ -11,6 +11,7 @@ import {
   
   const BoldTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headerClasses = {
+      gray: 'bg-gray-500 text-white',
       sky: 'bg-sky-600 text-white',
       teal: 'bg-teal-600 text-white',
       red: 'bg-red-500 text-white',
@@ -18,6 +19,7 @@ import {
     };
   
     const sectionClasses = {
+      gray: 'border-t-4 border-gray-500',
       sky: 'border-t-4 border-sky-600',
       teal: 'border-t-4 border-teal-600',
       red: 'border-t-4 border-red-500',
@@ -25,6 +27,7 @@ import {
     };
   
     const textClasses = {
+      gray: 'text-gray-500',
       sky: 'text-sky-600',
       teal: 'text-teal-600',
       red: 'text-red-500',
@@ -35,7 +38,7 @@ import {
       <div className="bg-white p-10 font-sans text-gray-900">
         {/* Header */}
         {cvData.personal && (
-          <header className={`p-8 mb-12 ${headerClasses[color]} text-center`}>
+          <header className={`p-8 mb-12 ${headerClasses[color]} rounded text-center`}>
             <h1 className="text-5xl font-extrabold tracking-wide uppercase">
               {cvData.personal.firstName} {cvData.personal.lastName}
             </h1>

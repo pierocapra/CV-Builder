@@ -23,7 +23,7 @@ function CvBuilder() {
   const [cvData, setCvData] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [template, setTemplate] = useState('minimal'); 
-  const [color,setColor] = useState('sky'); 
+  const [color,setColor] = useState('gray'); 
   const [sectionOrder, setSectionOrder] = useState([
      'education', 'work', 'skills', 'links','additional'
   ]);
@@ -259,6 +259,7 @@ function CvBuilder() {
         <button onClick={() => setTemplate('creative')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'creative' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Creative</button>
         <button onClick={() => setTemplate('bold')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'bold' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Bold</button>
         <h4 className="font-bold underline underline-offset-6">COLORS</h4>
+        <button onClick={() => setColor('gray')} className={`bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ${color === 'gray' ?'outline-1 outline-gray-700 shadow-md/50' :'' }`}>Gray</button>
         <button onClick={() => setColor('sky')} className={`bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 ${color === 'sky' ?'outline-1 outline-sky-700 shadow-md/50' :'' }`}>Sky</button>
         <button onClick={() => setColor('teal')} className={`bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 ${color === 'teal' ?'outline-1 outline-teal-700 shadow-md/50' :'' }`}>Teal</button>
         <button onClick={() => setColor('red')} className={`bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500 ${color === 'red' ?'outline-1 outline-red-700 shadow-md/50' :'' }`}>Coral</button>

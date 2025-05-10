@@ -11,6 +11,7 @@ import {
   
   const MinimalTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const textClasses = {
+      gray: 'text-gray-500',
       sky: 'text-sky-700',
       teal: 'text-teal-700',
       red: 'text-red-500',

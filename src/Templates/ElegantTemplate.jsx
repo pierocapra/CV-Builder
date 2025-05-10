@@ -12,12 +12,14 @@ import { SortableSection } from "../Utils/DndUtils.jsx";
 
 const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder, color}) => {
   const textClasses = {
+    gray: 'text-gray-500',
     sky: 'text-sky-600',
     teal: 'text-teal-600',
     red: 'text-red-400',
     cyan: 'text-cyan-600',
   };
   const borderClasses = {
+    gray: 'border-gray-400',
     sky: 'border-sky-600',
     teal: 'border-teal-600',
     red: 'border-red-400',

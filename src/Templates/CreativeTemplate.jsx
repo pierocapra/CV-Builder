@@ -11,6 +11,7 @@ import {
   
   const CreativeTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headerClasses = {
+      gray: 'bg-gray-500 text-white',
       sky: 'bg-sky-600 text-white',
       teal: 'bg-teal-600 text-white',
       red: 'bg-red-500 text-white',
@@ -18,6 +19,7 @@ import {
     };
   
     const textClasses = {
+      gray: 'text-gray-500',
       sky: 'text-sky-600',
       teal: 'text-teal-600',
       red: 'text-red-500',
