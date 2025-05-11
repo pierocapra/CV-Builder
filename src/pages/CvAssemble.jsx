@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors
-  } from '@dnd-kit/core';
-  import {
-    arrayMove,
-    sortableKeyboardCoordinates,
-  } from '@dnd-kit/sortable';
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
 
-  import { useReactToPrint } from 'react-to-print';
-  import ModernTemplate from "../Templates/ModernTemplate";
-  import ElegantTemplate from "../Templates/ElegantTemplate";
-  import MinimalTemplate from "../Templates/MinimalTemplate";
-  import CompactTemplate from "../Templates/CompactTemplate";
-  import CreativeTemplate from "../Templates/CreativeTemplate";
-  import BoldTemplate from "../Templates/BoldTemplate";
-  
+import { useReactToPrint } from 'react-to-print';
+import ModernTemplate from "../Templates/ModernTemplate";
+import ElegantTemplate from "../Templates/ElegantTemplate";
+import MinimalTemplate from "../Templates/MinimalTemplate";
+import CompactTemplate from "../Templates/CompactTemplate";
+import CreativeTemplate from "../Templates/CreativeTemplate";
+import BoldTemplate from "../Templates/BoldTemplate";
 
-function CvAssemble() {
-  const [cvData, setCvData] = useState({});
+function CvAssemble({ cvData: initialCvData }) {
+  const [cvData, setCvData] = useState(() => initialCvData || {});
   const [selectedItems, setSelectedItems] = useState([]);
-  const [template, setTemplate] = useState('minimal'); 
-  const [color,setColor] = useState('gray'); 
+  const [template, setTemplate] = useState('minimal');
+  const [color, setColor] = useState('gray');
   const [sectionOrder, setSectionOrder] = useState([
-     'education', 'work', 'skills', 'links','additional'
+    'education', 'work', 'skills', 'links', 'additional'
   ]);
 
   // Setup sensors
@@ -35,19 +34,19 @@ function CvAssemble() {
       coordinateGetter: sortableKeyboardCoordinates
     })
   );
-  
+
   const handleDragEnd = (event, sectionKey) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-  
+
     setSelectedItems(prev => {
       const filtered = prev.filter(item => item.type === sectionKey);
       const rest = prev.filter(item => item.type !== sectionKey);
-  
+
       const oldIndex = filtered.findIndex(item => item.id === active.id);
       const newIndex = filtered.findIndex(item => item.id === over.id);
       const reordered = arrayMove(filtered, oldIndex, newIndex);
-  
+
       return [...rest, ...reordered];
     });
   };
@@ -55,23 +54,12 @@ function CvAssemble() {
   const handleSectionDragEnd = (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-  
+
     const oldIndex = sectionOrder.findIndex((id) => id === active.id);
     const newIndex = sectionOrder.findIndex((id) => id === over.id);
-  
+
     setSectionOrder((items) => arrayMove(items, oldIndex, newIndex));
   };
-  
-
-  useEffect(() => {
-    const personal = JSON.parse(localStorage.getItem('personalInfo')) || {};
-    const additional = JSON.parse(localStorage.getItem('additionalInfo')) || {};
-    const education = JSON.parse(localStorage.getItem('education')) || [];
-    const work = JSON.parse(localStorage.getItem('workExperience')) || [];
-    const skills = JSON.parse(localStorage.getItem('skills')) || [];
-    const links = JSON.parse(localStorage.getItem('links')) || [];
-    setCvData({ personal, additional, education, work, skills, links });
-  }, []);
 
   const toggleItem = (type, item) => {
     const id = `${type}-${JSON.stringify(item)}`;
@@ -90,8 +78,7 @@ function CvAssemble() {
   }, {});
 
   const contentRef = useRef();
-  const handlePrint = useReactToPrint({ contentRef }); 
-  
+  const handlePrint = useReactToPrint({ contentRef });
 
   return (
     <div className="flex min-h-screen gap-6">
@@ -216,7 +203,7 @@ function CvAssemble() {
           />      
         )}
         {template === 'compact' && (
-        <CompactTemplate 
+          <CompactTemplate 
             cvData={cvData}
             groupedItems={groupedItems}
             sensors={sensors}
@@ -249,6 +236,7 @@ function CvAssemble() {
           />
         )}
       </section>
+
       {/* Options Area */}
       <div className="flex flex-col gap-2 mb-4 mt-4">
         <h4 className="font-bold underline underline-offset-6">TEMPLATES</h4>
@@ -258,12 +246,14 @@ function CvAssemble() {
         <button onClick={() => setTemplate('compact')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'compact' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Compact</button>
         <button onClick={() => setTemplate('creative')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'creative' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Creative</button>
         <button onClick={() => setTemplate('bold')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'bold' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Bold</button>
+
         <h4 className="font-bold underline underline-offset-6">COLORS</h4>
         <button onClick={() => setColor('gray')} className={`bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ${color === 'gray' ?'outline-1 outline-gray-700 shadow-md/50' :'' }`}>Gray</button>
         <button onClick={() => setColor('sky')} className={`bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 ${color === 'sky' ?'outline-1 outline-sky-700 shadow-md/50' :'' }`}>Sky</button>
         <button onClick={() => setColor('teal')} className={`bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 ${color === 'teal' ?'outline-1 outline-teal-700 shadow-md/50' :'' }`}>Teal</button>
         <button onClick={() => setColor('red')} className={`bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500 ${color === 'red' ?'outline-1 outline-red-700 shadow-md/50' :'' }`}>Coral</button>
         <button onClick={() => setColor('cyan')} className={`bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700 ${color === 'cyan' ?'outline-1 outline-cyan-700 shadow-md/50' :'' }`}>Cyan</button>
+
         <h4 className="font-bold underline underline-offset-6">FORMAT</h4>
         <button
           onClick={handlePrint}
