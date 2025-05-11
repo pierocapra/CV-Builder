@@ -9,9 +9,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 
-// Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-
 const AuthContext = React.createContext();
 
 export function useAuth() {
@@ -20,8 +18,7 @@ export function useAuth() {
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [authReady, setAuthReady] = useState(false); // ✅ Renamed for clarity
 
   function signup(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -32,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   function logout() {
-    signOut(auth);
+    return signOut(auth);
   }
 
   function resetPassword(email) {
@@ -40,29 +37,17 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        await auth._initializationPromise;
-        setIsInitialized(true);
-      } catch (error) {
-        // Handle error if authentication initialization fails
-        console.error(error);
-      }
-    };
-    initializeAuth();
-  }, []);
-
-  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-      setLoading(false);
+      setAuthReady(true); // ✅ Now we know the auth state has been checked
     });
+
     return unsubscribe;
   }, []);
 
   const value = {
     currentUser,
-    isInitialized,
+    authReady, // ✅ Now available to components
     signup,
     login,
     logout,
@@ -71,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {authReady && children}
     </AuthContext.Provider>
   );
 };
