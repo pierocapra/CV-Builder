@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../Utils/AuthContext';
+import { useCv } from '../Utils/CvContext';
 
-export default function AdditionalInfoManager() {
+export default function AdditionalInfoManager({ onClose }) {
+  const { user, saveData } = useAuth();
+  const { additionalInfo, setAdditionalInfo } = useCv();
+
   const [formData, setFormData] = useState({
     dateOfBirth: '',
+    eligibleToWorkInUk: false,
     hasDrivingLicense: false,
     summary: '',
   });
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    const savedData = localStorage.getItem('additionalInfo');
-    if (savedData) {
-      setFormData(JSON.parse(savedData));
+    if (additionalInfo && Object.keys(additionalInfo).length > 0) {
+      setFormData(additionalInfo);
     }
-  }, []);
+  }, [additionalInfo]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -22,17 +29,28 @@ export default function AdditionalInfoManager() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem('additionalInfo', JSON.stringify(formData));
-    alert('Data saved locally!');
+    try {
+      if (user?.uid) {
+        await saveData('additionalInfo', formData);
+      } else {
+        localStorage.setItem('additionalInfo', JSON.stringify(formData));
+      }
+      setAdditionalInfo(formData);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Personal Information</h1>
+      <h1 className="text-2xl font-bold mb-6">Additional Information</h1>
+      {error && <div className="text-red-600 mb-4">{error}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
+        <div>
           <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">
             Date of Birth
           </label>

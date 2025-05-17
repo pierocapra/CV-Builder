@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from '../Components/Modal';
 import PersonalInfoManager from '../Components/PersonalInfoManager';
 import AdditionalInfoManager from '../Components/AdditionalinfoManager';
@@ -7,121 +7,37 @@ import WorkExperienceManager from "../Components/WorkExperienceManager";
 import SkillsManager from '../Components/SkillsManager';
 import LinksManager from '../Components/LinksManager';
 import CvAssemble from "./CvAssemble";
-import { useAuth } from '../Utils/AuthContext';
+import { useCv } from '../Utils/CvContext';
 
 function AddEdit() {
-  const { user, getData, saveData } = useAuth();
-  const [assemble, setAssemble] = useState(false);
-  
-  const [personalInfo, setPersonalInfo] = useState(null);
+  const { 
+    assemble,
+    personalInfo,
+    additionalInfo,
+    education,
+    workExperience,
+    skills,
+    setSkills,
+    links,
+    handleDelete,
+    cvData
+  } = useCv();
+
   const [isPersonalInfoOpen, setIsPersonalInfoOpen] = useState(false);
-
-  const [additionalInfo, setAdditionalInfo] = useState(null);
   const [isAdditionalInfoOpen, setIsAdditionalInfoOpen] = useState(false);
-
-  const [education, setEducation] = useState([]);
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [editingEducation, setEditingEducation] = useState(null);
-
-  const [workExperience, setWorkExperience] = useState([]);
   const [isWorkModalOpen, setIsWorkModalOpen] = useState(false);
   const [editingWork, setEditingWork] = useState(null);
-
-  const [skills, setSkills] = useState([]);
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
-
-  const [links, setLinks] = useState([]);
   const [isLinksModalOpen, setIsLinksModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log('Current auth state:', { user, isAuthenticated: !!user?.uid });
-      
-      if (user?.uid) {
-        console.log('Fetching data for authenticated user:', user.uid);
-        // Fetch data for authenticated user
-        try {
-          const personalData = await getData('personalInfo');
-          console.log('Fetched personal data:', personalData);
-          if (personalData) setPersonalInfo(personalData);
-          
-          const additionalData = await getData('additionalInfo');
-          if (additionalData) setAdditionalInfo(additionalData);
-          
-          const educationData = await getData('education');
-          if (educationData) setEducation(educationData);
-          
-          const workData = await getData('workExperience');
-          if (workData) setWorkExperience(workData);
-          
-          const skillsData = await getData('skills');
-          if (skillsData) setSkills(skillsData);
-          
-          const linksData = await getData('links');
-          if (linksData) setLinks(linksData);
-        } catch (err) {
-          console.error('Error fetching data:', err);
-        }
-      } else {
-        console.log('Using localStorage for non-authenticated user');
-        // Load from localStorage for non-authenticated users
-        const getLocalData = (key, setter) => {
-          const local = localStorage.getItem(key);
-          if (local) {
-            setter(JSON.parse(local));
-          }
-        };
-
-        getLocalData('personalInfo', setPersonalInfo);
-        getLocalData('additionalInfo', setAdditionalInfo);
-        getLocalData('education', setEducation);
-        getLocalData('workExperience', setWorkExperience);
-        getLocalData('skills', setSkills);
-        getLocalData('links', setLinks);
-      }
-    };
-
-    fetchData();
-  }, [
-    user,
-    getData,
-    isPersonalInfoOpen,
-    isAdditionalInfoOpen,
-    isEducationModalOpen,
-    isWorkModalOpen,
-    isSkillsModalOpen,
-    isLinksModalOpen,
-  ]);
-
-  const handleDelete = async (key, data, index, setter) => {
-    const updated = [...data];
-    updated.splice(index, 1);
-    await saveData(key, updated);
-    setter(updated);
-  };
 
   return (
     <>
-      <button
-        onClick={() => setAssemble((prev) => !prev)}
-        className="fixed top-20 right-4 px-4 py-2 bg-blue-500 text-white rounded shadow-md hover:bg-blue-600 transition-all"
-      >
-        {assemble ? 'CV Editor' : 'CV Assemble'}
-      </button>
-
       {assemble ? (
-        <CvAssemble
-          cvData={{
-            personal: personalInfo,
-            additional: additionalInfo,
-            education,
-            work: workExperience,
-            skills,
-            links
-          }}
-        />
+        <CvAssemble cvData={cvData} />
       ) : (
         <>
           {/* Personal Info Section */}
@@ -208,7 +124,7 @@ function AddEdit() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('education', education, index, setEducation)}
+                          onClick={() => handleDelete('education', education, index)}
                           className="text-red-600 hover:underline"
                         >
                           Delete
@@ -261,7 +177,7 @@ function AddEdit() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('workExperience', workExperience, index, setWorkExperience)}
+                          onClick={() => handleDelete('workExperience', workExperience, index)}
                           className="text-red-600 hover:underline"
                         >
                           Delete
@@ -311,7 +227,7 @@ function AddEdit() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('skills', skills, index, setSkills)}
+                          onClick={() => handleDelete('skills', skills, index)}
                           className="text-red-600 hover:underline"
                         >
                           Delete
@@ -362,7 +278,7 @@ function AddEdit() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('links', links, index, setLinks)}
+                          onClick={() => handleDelete('links', links, index)}
                           className="text-red-600 hover:underline"
                         >
                           Delete

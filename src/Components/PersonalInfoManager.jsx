@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Utils/AuthContext';
+import { useCv } from '../Utils/CvContext';
 
-export default function PersonalInfoManager({ onClose, personalInfo }) {
+export default function PersonalInfoManager({ onClose }) {
+  const { user, saveData } = useAuth();
+  const { personalInfo, setPersonalInfo } = useCv();
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -13,14 +17,12 @@ export default function PersonalInfoManager({ onClose, personalInfo }) {
   });
 
   const [error, setError] = useState(null);
-  const { currentUser } = useAuth();
 
   useEffect(() => {
     if (personalInfo && Object.keys(personalInfo).length > 0) {
       setFormData(personalInfo);
     }
   }, [personalInfo]);
-  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,33 +34,18 @@ export default function PersonalInfoManager({ onClose, personalInfo }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!currentUser) {
-      localStorage.setItem('personalInfo', JSON.stringify(formData));
-    } else {
-      try {
-        const response = await fetch(
-          `https://cv-builder-9a845-default-rtdb.europe-west1.firebasedatabase.app/personal-info/${currentUser.uid}.json`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Something went wrong!');
-        }
-      } catch (error) {
-        console.error(error);
-        setError(error.message);
-        return;
+    try {
+      if (user?.uid) {
+        await saveData('personalInfo', formData);
+      } else {
+        localStorage.setItem('personalInfo', JSON.stringify(formData));
       }
+      setPersonalInfo(formData);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
     }
-
-    onClose();
   };
 
   return (

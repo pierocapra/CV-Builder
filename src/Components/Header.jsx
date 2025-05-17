@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../Utils/AuthContext';
+import { useCv } from '../Utils/CvContext';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [error, setError] = useState(null);
   const { user, logout } = useAuth();
+  const { assemble, setAssemble } = useCv();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isEditorPage = location.pathname === '/cv-editor' || location.pathname === '/try';
     
   async function handleLogout() {
     setError("")
-
     try {
       await logout()
       navigate("/")
@@ -36,12 +39,16 @@ const Header = () => {
       <div className="space-x-4">
         {user ? (
           <>
-            <span> Hello {user.email}!</span>
-            {window.location.pathname === "/cv-editor" ? (
-              <Link to="/cv-assemble" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                CV Assemble
-              </Link>
-            ) : (
+            <span>Hello {user.email}!</span>
+            {isEditorPage && (
+              <button
+                onClick={() => setAssemble(prev => !prev)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                {assemble ? 'CV Editor' : 'CV Assemble'}
+              </button>
+            )}
+            {!isEditorPage && (
               <Link to="/cv-editor" className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded">
                 CV Editor
               </Link>
@@ -52,9 +59,19 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link to="/try" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-              Try It Out
-            </Link>
+            {isEditorPage && (
+              <button
+                onClick={() => setAssemble(prev => !prev)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                {assemble ? 'CV Editor' : 'CV Assemble'}
+              </button>
+            )}
+            {!isEditorPage && (
+              <Link to="/try" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                Try It Out
+              </Link>
+            )}
             <Link to="/login" className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
               Login
             </Link>

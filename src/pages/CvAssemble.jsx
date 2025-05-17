@@ -17,8 +17,10 @@ import MinimalTemplate from "../Templates/MinimalTemplate";
 import CompactTemplate from "../Templates/CompactTemplate";
 import CreativeTemplate from "../Templates/CreativeTemplate";
 import BoldTemplate from "../Templates/BoldTemplate";
+import { useAuth } from '../Utils/AuthContext';
 
 function CvAssemble({ cvData: initialCvData }) {
+  const { user } = useAuth();
   const [cvData, setCvData] = useState(() => initialCvData || {});
   const [selectedItems, setSelectedItems] = useState([]);
   const [template, setTemplate] = useState('minimal');
@@ -84,7 +86,54 @@ function CvAssemble({ cvData: initialCvData }) {
     <div className="flex min-h-screen gap-6">
       {/* Sidebar */}
       <aside className="w-1/4 p-4 bg-gray-200 border-r space-y-4 text-sm overflow-y-auto">
-        <h2 className="font-semibold">CV Elements</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-semibold">CV Elements</h2>
+          <button
+            onClick={handlePrint}
+            disabled={!user}
+            className={`px-3 py-1 rounded text-white ${
+              user 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
+            title={!user ? 'Login to enable PDF download' : 'Download PDF'}
+          >
+            PDF
+          </button>
+        </div>
+
+        {/* Template Selection */}
+        <div className="mb-4">
+          <label className="block font-medium mb-2">Template</label>
+          <select
+            value={template}
+            onChange={(e) => setTemplate(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="minimal">Minimal</option>
+            <option value="modern">Modern</option>
+            <option value="elegant">Elegant</option>
+            <option value="compact">Compact</option>
+            <option value="creative">Creative</option>
+            <option value="bold">Bold</option>
+          </select>
+        </div>
+
+        {/* Color Selection */}
+        <div className="mb-4">
+          <label className="block font-medium mb-2">Color Theme</label>
+          <select
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="gray">Gray</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="red">Red</option>
+            <option value="purple">Purple</option>
+          </select>
+        </div>
 
         <div>
           <label className="block font-medium">Additional Info</label>
@@ -236,32 +285,6 @@ function CvAssemble({ cvData: initialCvData }) {
           />
         )}
       </section>
-
-      {/* Options Area */}
-      <div className="flex flex-col gap-2 mb-4 mt-4">
-        <h4 className="font-bold underline underline-offset-6">TEMPLATES</h4>
-        <button onClick={() => setTemplate('minimal')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'minimal' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Minimal</button>
-        <button onClick={() => setTemplate('elegant')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'elegant' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Elegant</button>
-        <button onClick={() => setTemplate('modern')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'modern' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Modern</button>
-        <button onClick={() => setTemplate('compact')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'compact' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Compact</button>
-        <button onClick={() => setTemplate('creative')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'creative' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Creative</button>
-        <button onClick={() => setTemplate('bold')} className={`bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition ${template === 'bold' ?'outline-1 outline-gray-300 shadow-md/20' :'' }`}>Bold</button>
-
-        <h4 className="font-bold underline underline-offset-6">COLORS</h4>
-        <button onClick={() => setColor('gray')} className={`bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ${color === 'gray' ?'outline-1 outline-gray-700 shadow-md/50' :'' }`}>Gray</button>
-        <button onClick={() => setColor('sky')} className={`bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 ${color === 'sky' ?'outline-1 outline-sky-700 shadow-md/50' :'' }`}>Sky</button>
-        <button onClick={() => setColor('teal')} className={`bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 ${color === 'teal' ?'outline-1 outline-teal-700 shadow-md/50' :'' }`}>Teal</button>
-        <button onClick={() => setColor('red')} className={`bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500 ${color === 'red' ?'outline-1 outline-red-700 shadow-md/50' :'' }`}>Coral</button>
-        <button onClick={() => setColor('cyan')} className={`bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700 ${color === 'cyan' ?'outline-1 outline-cyan-700 shadow-md/50' :'' }`}>Cyan</button>
-
-        <h4 className="font-bold underline underline-offset-6">FORMAT</h4>
-        <button
-          onClick={handlePrint}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          PDF
-        </button>
-      </div>
     </div>
   );
 }

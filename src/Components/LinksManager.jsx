@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../Utils/AuthContext';
+import { useCv } from '../Utils/CvContext';
 
 const LinksManager = ({ onClose, existingEntry = null, index = null }) => {
+  const { user, saveData } = useAuth();
+  const { links, setLinks } = useCv();
+
   const [entry, setEntry] = useState({ label: '', url: '' });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (existingEntry) setEntry(existingEntry);
@@ -12,22 +18,34 @@ const LinksManager = ({ onClose, existingEntry = null, index = null }) => {
     setEntry((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const stored = JSON.parse(localStorage.getItem('links')) || [];
+    try {
+      const updated = [...links];
+      
+      if (index !== null) {
+        updated[index] = entry;
+      } else {
+        updated.push(entry);
+      }
 
-    if (index !== null) {
-      stored[index] = entry;
-    } else {
-      stored.push(entry);
+      if (user?.uid) {
+        await saveData('links', updated);
+      } else {
+        localStorage.setItem('links', JSON.stringify(updated));
+      }
+      
+      setLinks(updated);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
     }
-
-    localStorage.setItem('links', JSON.stringify(stored));
-    onClose();
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && <div className="text-red-600 mb-4">{error}</div>}
       <div>
         <label htmlFor="label" className="block text-sm font-medium text-gray-700">
           Label (e.g., Portfolio, GitHub)
