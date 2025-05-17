@@ -25,9 +25,9 @@ const LoginPage = () => {
       }
 
   return (
-    <div className="flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">Login to CV Craft</h1>
+    <div className="min-h-screen md:py-12 flex items-start md:items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white md:rounded-2xl md:shadow-xl p-6 md:p-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-700 mb-6">Login to CV Craft</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -73,7 +73,7 @@ const LoginPage = () => {
           </div>
 
           <div className="text-center mt-6">
-            <Link to="/test-page" className="inline-block text-blue-700 hover:text-blue-900 font-medium">
+            <Link to="/try" className="inline-block text-blue-700 hover:text-blue-900 font-medium">
               <h3 className="text-lg underline">Try the app without signing in</h3>
             </Link>
           </div>
