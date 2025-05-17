@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-
-const CvContext = createContext(null);
+import { CvContext } from './cvHooks';
 
 export const CvProvider = ({ children }) => {
   const { user, getData, saveData } = useAuth();
@@ -72,7 +71,7 @@ export const CvProvider = ({ children }) => {
     };
 
     fetchData();
-  }, [user, getData]); // Only re-run when user or getData changes
+  }, [user, getData]);
 
   const handleDelete = async (key, data, index) => {
     const updated = [...data];
@@ -133,12 +132,4 @@ export const CvProvider = ({ children }) => {
       {children}
     </CvContext.Provider>
   );
-};
-
-export const useCv = () => {
-  const context = useContext(CvContext);
-  if (!context) {
-    throw new Error('useCv must be used within a CvProvider');
-  }
-  return context;
 }; 

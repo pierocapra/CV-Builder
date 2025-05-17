@@ -7,7 +7,7 @@ import WorkExperienceManager from "../Components/WorkExperienceManager";
 import SkillsManager from '../Components/SkillsManager';
 import LinksManager from '../Components/LinksManager';
 import CvAssemble from "./CvAssemble";
-import { useCv } from '../Utils/CvContext';
+import { useCv } from '../Utils/cvHooks';
 
 function AddEdit() {
   const { 

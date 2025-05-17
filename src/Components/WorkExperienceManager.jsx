@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../Utils/AuthContext';
-import { useCv } from '../Utils/CvContext';
+import { useCv } from '../Utils/cvHooks';
 
 export default function WorkExperienceManager({ onClose, existingEntry = null, index = null }) {
   const { user, saveData } = useAuth();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Utils/AuthContext';
-import { useCv } from '../Utils/CvContext';
+import { useCv } from '../Utils/cvHooks';
 
 const LinksManager = ({ onClose, existingEntry = null, index = null }) => {
   const { user, saveData } = useAuth();
