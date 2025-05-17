@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../Auth';
+import { useAuth } from '../Utils/AuthContext';
 
 export default function PersonalInfoManager({ onClose, personalInfo }) {
   const [formData, setFormData] = useState({

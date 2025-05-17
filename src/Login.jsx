@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useAuth } from './Auth';
+import { useAuth } from './Utils/AuthContext';
 
 const LoginPage = () => {
     const emailRef = useRef()
@@ -15,14 +15,13 @@ const LoginPage = () => {
 
         setError("")
         await login(emailRef.current.value, passwordRef.current.value)
-          .then((userCredential) => {
+          .then(() => {
             // Signed in 
             navigate("/cv-editor")
           })
           .catch((error) => {
             setError("Failed to log in: " + error.code)
           });
-        setLoading(false)
       }
 
   return (

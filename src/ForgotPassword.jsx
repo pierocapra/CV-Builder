@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { useAuth } from './Auth';
+import { useAuth } from './Utils/AuthContext';
 
 export default function ForgotPassword() {
     const emailRef = useRef()
     const { resetPassword } = useAuth()
     const [error, setError] = useState("")
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
 
 
@@ -15,7 +15,7 @@ export default function ForgotPassword() {
 
           setMessage('')
           setError("")
-          setLoading(true)
+          // setLoading(true)
           await resetPassword(emailRef.current.value)
             .then(() => {
               setMessage("Check your inbox for instructions")
@@ -23,7 +23,7 @@ export default function ForgotPassword() {
             .catch(error => {
               setError("Failed to reset password: " +error.message)
             });
-          setLoading(false)
+          // setLoading(false)
     }
 
 

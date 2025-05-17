@@ -1,4 +1,4 @@
-import { useAuth } from '../Auth';
+import { useAuth } from '../Utils/AuthContext';
 
 function CvBuilder () {
     const {currentUser}  = useAuth()

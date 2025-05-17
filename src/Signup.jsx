@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import {  updateProfile } from "firebase/auth";
 
-import { useAuth } from './Auth';
+import { useAuth } from './Utils/AuthContext';
 
 function Signup() {
     const passwordRef = useRef();
@@ -38,7 +38,7 @@ function Signup() {
             setError("Failed to create an account: " + error.code)
           });
 
-        setLoading(false)
+
       }
 
       return ( 

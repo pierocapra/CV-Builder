@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../Auth';
+import { useAuth } from '../Utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [error, setError] = useState(null);
-  const { logout } = useAuth()
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
     
   async function handleLogout() {
@@ -20,25 +20,23 @@ const Header = () => {
     }
   }
 
-  function handleSignup() {
-    navigate("/signup")
-}
+//   function handleSignup() {
+//     navigate("/signup")
+// }
 
-  const {currentUser}  = useAuth();
-
-  function getInitials(name) {
-    const nameArray = name.split(' '); // Split the name into an array of words
-    const initials = nameArray.map(word => word.charAt(0).toUpperCase()); // Get the first character of each word and capitalize it
-    return initials.join(''); // Join the initials into a single string
-  }
+  // function getInitials(name) {
+  //   const nameArray = name.split(' '); // Split the name into an array of words
+  //   const initials = nameArray.map(word => word.charAt(0).toUpperCase()); // Get the first character of each word and capitalize it
+  //   return initials.join(''); // Join the initials into a single string
+  // }
 
   return (
     <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
       <h1 className="text-2xl font-bold text-blue-600">CV Builder</h1>
       <div className="space-x-4">
-        {currentUser ? (
+        {user ? (
           <>
-            <span> Hello {currentUser.displayName}!</span>
+            <span> Hello {user.email}!</span>
             {window.location.pathname === "/cv-editor" ? (
               <Link to="/cv-assemble" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
                 CV Assemble
@@ -48,10 +46,15 @@ const Header = () => {
                 CV Editor
               </Link>
             )}
-            <button onClick={handleLogout}>SignOut</button>
+            <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+              Sign Out
+            </button>
           </>
         ) : (
           <>
+            <Link to="/try" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+              Try It Out
+            </Link>
             <Link to="/login" className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
               Login
             </Link>
