@@ -18,6 +18,26 @@ import CompactTemplate from "../Templates/CompactTemplate";
 import CreativeTemplate from "../Templates/CreativeTemplate";
 import BoldTemplate from "../Templates/BoldTemplate";
 import { useAuth } from '../Utils/AuthContext';
+import CustomDropdown from '../Components/CustomDropdown';
+
+// Template options
+const templateOptions = [
+  { value: 'minimal', label: 'Minimal' },
+  { value: 'modern', label: 'Modern' },
+  { value: 'elegant', label: 'Elegant' },
+  { value: 'compact', label: 'Compact' },
+  { value: 'creative', label: 'Creative' },
+  { value: 'bold', label: 'Bold' },
+];
+
+// Color options
+const colorOptions = [
+  { value: 'gray', label: 'Gray' },
+  { value: 'sky', label: 'Sky' },
+  { value: 'teal', label: 'Teal' },
+  { value: 'red', label: 'Red' },
+  { value: 'cyan', label: 'Cyan' },
+];
 
 function CvAssemble({ cvData: initialCvData }) {
   const { user } = useAuth();
@@ -126,37 +146,20 @@ function CvAssemble({ cvData: initialCvData }) {
         </div>
 
         {/* Template Selection */}
-        <div className="mb-4">
-          <label className="block font-medium mb-2">Template</label>
-          <select
-            value={template}
-            onChange={(e) => setTemplate(e.target.value)}
-            className="w-full p-2 border rounded"
-          >
-            <option value="minimal">Minimal</option>
-            <option value="modern">Modern</option>
-            <option value="elegant">Elegant</option>
-            <option value="compact">Compact</option>
-            <option value="creative">Creative</option>
-            <option value="bold">Bold</option>
-          </select>
-        </div>
+        <CustomDropdown
+          label="Template"
+          value={template}
+          onChange={(value) => setTemplate(value)}
+          options={templateOptions}
+        />
 
         {/* Color Selection */}
-        <div className="mb-4">
-          <label className="block font-medium mb-2">Color Theme</label>
-          <select
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="w-full p-2 border rounded"
-          >
-            <option value="gray">Gray</option>
-            <option value="sky">Sky</option>
-            <option value="teal">Teal</option>
-            <option value="red">Red</option>
-            <option value="cyan">Cyan</option>
-          </select>
-        </div>
+        <CustomDropdown
+          label="Color Theme"
+          value={color}
+          onChange={(value) => setColor(value)}
+          options={colorOptions}
+        />
 
         {/* Additional Info */}
         <div className="mb-4">
