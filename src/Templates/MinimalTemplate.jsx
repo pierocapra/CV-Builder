@@ -56,7 +56,9 @@ import {
                 <SortableSection key={sectionKey} id={sectionKey}>
                   <div className="mb-6 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded p-2 transition">
                     {sectionKey !== 'additional' ? (
-                      <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2 capitalize`}>{sectionKey}</h2>
+                      <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2 capitalize`}>
+                        {sectionKey === 'summary' ? 'Professional Summary' : sectionKey}
+                      </h2>
                     ) : (
                       <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2`}>Additional Info</h2>
                     )}

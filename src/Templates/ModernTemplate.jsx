@@ -32,16 +32,17 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
   );
 
   return (
-    <div className="bg-white p-8 text-gray-800">
+    <div className="bg-white p-6 text-gray-800">
       {/* Header */}
       {cvData.personal && (
-        <div className="mb-6 border-b pb-4">
-          <h1 className="text-3xl font-bold text-gray-900">
+        <div className="mb-4 border-b pb-3">
+          <h1 className="text-2xl font-bold text-gray-900">
             {cvData.personal.firstName} {cvData.personal.lastName}
           </h1>
-          <div className="mt-2 space-y-1">
+          <p className="text-base text-gray-600 mt-1">{cvData.personal.title}</p>
+          <div className="mt-2 space-y-0.5">
             {Object.entries(cvData.personal)
-              .filter(([key]) => key !== 'firstName' && key !== 'lastName')
+              .filter(([key]) => !['firstName', 'lastName', 'title'].includes(key))
               .map(([key, value]) => (
                 <p key={key} className="text-sm">
                   <strong className="capitalize">{key}:</strong> {value}
@@ -64,11 +65,13 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                  <div className="mb-4 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
                     {sectionKey !== 'additional' ? (
-                      <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3 capitalize`}>{sectionKey}</h2>
+                      <h2 className={`text-lg font-semibold ${textClasses[color]} mb-2 capitalize`}>
+                        {sectionKey === 'summary' ? 'Professional Summary' : sectionKey}
+                      </h2>
                     ) : (
-                      <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3`}>Additional Info</h2>
+                      <h2 className={`text-lg font-semibold ${textClasses[color]} mb-2`}>Additional Info</h2>
                     )}
 
                     {sectionKey === 'skills' ? (
@@ -85,17 +88,17 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                         >
                           {groupedItems[sectionKey].map((entry) => (
                             <SortableItem key={entry.id} id={entry.id}>
-                              <div className="relative pb-4 mb-1 mt-1 hover:bg-gray-50 transition">
+                              <div className="relative pb-3 mb-1 hover:bg-gray-50 transition">
                                 {entry.type === 'education' && (
                                   <>
-                                    <h3 className="font-medium">{entry.item.degree} in {entry.item.field}</h3>
+                                    <h3 className="font-medium text-base">{entry.item.degree} in {entry.item.field}</h3>
                                     <p className="text-sm">{entry.item.school}, {entry.item.location}</p>
                                     <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
                                   </>
                                 )}
                                 {entry.type === 'work' && (
                                   <>
-                                    <h3 className="font-medium">{entry.item.title}</h3>
+                                    <h3 className="font-medium text-base">{entry.item.title}</h3>
                                     <p className="text-sm">{entry.item.company}, {entry.item.location}</p>
                                     <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
                                     <p className="mt-1 text-sm">{entry.item.description}</p>
@@ -109,6 +112,11 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                                 {entry.type === 'additional' && (
                                   <p className="text-sm">
                                     <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
+                                  </p>
+                                )}
+                                {entry.type === 'summary' && (
+                                  <p className="text-sm text-gray-600 leading-relaxed">
+                                    {entry.item.value}
                                   </p>
                                 )}
                               </div>

@@ -39,18 +39,18 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
   );
 
   return (
-    <div className="bg-white p-10 font-serif text-gray-800 leading-relaxed">
-        {/* Header */}
+    <div className="bg-white p-8 font-serif text-gray-800 leading-relaxed">
+      {/* Header */}
       {cvData.personal && (
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold uppercase tracking-wide">
+        <header className="mb-6 text-center">
+          <h1 className="text-3xl font-bold uppercase tracking-wide">
             {cvData.personal.firstName} {cvData.personal.lastName}
           </h1>
           <div className="mt-2 text-sm text-gray-600">
             {Object.entries(cvData.personal)
               .filter(([key]) => key !== 'firstName' && key !== 'lastName')
               .map(([key, value]) => (
-                <p key={key}><strong>{key}:</strong> {value}</p>
+                <p key={key} className="text-sm"><strong>{key}:</strong> {value}</p>
               ))}
           </div>
         </header>
@@ -69,12 +69,12 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
           {sectionOrder.map((sectionKey) =>
             groupedItems[sectionKey]?.length ? (
               <SortableSection key={sectionKey} id={sectionKey}>
-                <div className="mb-10 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
-                  {sectionKey !== 'additional' ? (
-                    <h2 className={`text-2xl border-b pb-1 mb-4 ${textClasses[color]} font-semibold capitalize`}>{sectionKey}</h2>
-                  ) : (
-                    <h2 className={`text-2xl border-b pb-1 mb-4 ${textClasses[color]} font-semibold`}>Additional Info</h2>
-                  )}
+                <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                  <h2 className={`text-xl font-serif ${textClasses[color]} mb-3 capitalize`}>
+                    {sectionKey === 'summary' ? 'Professional Summary' : 
+                     sectionKey === 'additional' ? 'Additional Info' : 
+                     sectionKey}
+                  </h2>
                   
                   {sectionKey === 'skills' ? (
                     renderSkills(groupedItems[sectionKey])
@@ -88,31 +88,31 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                         items={groupedItems[sectionKey].map((item) => item.id)}
                         strategy={verticalListSortingStrategy}
                       >
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           {groupedItems[sectionKey].map((entry) => (
                             <SortableItem key={entry.id} id={entry.id}>
-                              <div className={`border-l-4 ${borderClasses[color]} pl-4 py-2 hover:bg-indigo-50 rounded`}>
+                              <div className={`border-l-3 ${borderClasses[color]} pl-3 py-2 hover:bg-indigo-50 rounded`}>
                                 {entry.type === 'summary' && (
-                                  <p className="text-lg leading-relaxed text-gray-700 font-light italic">{entry.item.value}</p>
+                                  <p className="text-base leading-relaxed text-gray-700 font-light italic">{entry.item.value}</p>
                                 )}
                                 {entry.type === 'additional' && (
-                                  <p>
+                                  <p className="text-sm">
                                     <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                                   </p>
                                 )}
                                 {entry.type === 'education' && (
                                   <div>
-                                    <h3 className="font-semibold text-lg">{entry.item.degree} in {entry.item.field}</h3>
-                                    <p className="italic">{entry.item.school}, {entry.item.location}</p>
-                                    <p className="text-sm">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <h3 className="font-semibold text-base">{entry.item.degree} in {entry.item.field}</h3>
+                                    <p className="italic text-sm">{entry.item.school}, {entry.item.location}</p>
+                                    <p className="text-xs text-gray-600">{entry.item.startDate} – {entry.item.endDate}</p>
                                   </div>
                                 )}
                                 {entry.type === 'work' && (
                                   <div>
-                                    <h3 className="font-semibold text-lg">{entry.item.title}</h3>
-                                    <p className="italic">{entry.item.company}, {entry.item.location}</p>
-                                    <p className="text-sm">{entry.item.startDate} – {entry.item.endDate}</p>
-                                    <p>{entry.item.description}</p>
+                                    <h3 className="font-semibold text-base">{entry.item.title}</h3>
+                                    <p className="italic text-sm">{entry.item.company}, {entry.item.location}</p>
+                                    <p className="text-xs text-gray-600">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-sm mt-1">{entry.item.description}</p>
                                   </div>
                                 )}
                                 {entry.type === 'links' && (

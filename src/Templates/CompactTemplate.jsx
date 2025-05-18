@@ -31,14 +31,14 @@ import {
     };
   
     return (
-      <div className="bg-white p-6 font-sans text-gray-900 text-sm">
+      <div className="bg-white p-5 font-sans text-gray-900 text-sm">
         {/* Header */}
         {cvData.personal && (
-          <header className="mb-6 pb-2">
-            <h1 className="text-2xl font-bold">
+          <header className="mb-4 pb-2">
+            <h1 className="text-xl font-bold">
               {cvData.personal.firstName} {cvData.personal.lastName}
             </h1>
-            <div className="text-xs text-gray-600 mt-1">
+            <div className="text-xs text-gray-600 mt-0.5">
               {Object.entries(cvData.personal)
                 .filter(([key]) => key !== 'firstName' && key !== 'lastName')
                 .map(([key, value]) => (
@@ -54,9 +54,13 @@ import {
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-5 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
+                  <div className="mb-4 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
                     {sectionKey !== 'additional' ? (
-                      <h2 className={`text-base font-semibold uppercase tracking-wide mb-1 ${headingClasses[color]}`}>{sectionKey}</h2>
+                      <h2 className={`text-base font-semibold ${headingClasses[color]} mb-2 capitalize`}>
+                        {sectionKey === 'summary' ? 'Professional Summary' : 
+                         sectionKey === 'additional' ? 'Additional Info' : 
+                         sectionKey}
+                      </h2>
                     ) : (
                       <h2 className={`text-base font-semibold uppercase tracking-wide mb-1 ${headingClasses[color]}`}>Additional Info</h2>
                     )}
@@ -70,33 +74,33 @@ import {
                               <SortableItem key={entry.id} id={entry.id}>
                                 {entry.type === 'summary' ? (
                                   <li className="pl-0">
-                                    <p className="text-sm leading-relaxed text-gray-700 pl-4 border-l-2 border-gray-400">{entry.item.value}</p>
+                                    <p className="text-sm leading-relaxed text-gray-700 pl-3 border-l border-gray-400">{entry.item.value}</p>
                                   </li>
                                 ) : (
-                                  <li className="relative pl-4 rounded">
-                                    <span className="absolute left-0 top-2.5 -translate-y-1/2 w-1 h-1 bg-gray-400 rounded-full"></span>
+                                  <li className="relative pl-3 rounded">
+                                    <span className="absolute left-0 top-2 -translate-y-1/2 w-1 h-1 bg-gray-400 rounded-full"></span>
                                     {entry.type === 'education' && (
                                       <div>
-                                        <p className="font-semibold">{entry.item.degree}</p>
+                                        <p className="font-medium text-sm">{entry.item.degree}</p>
                                         <p className="text-xs">{entry.item.school} – {entry.item.startDate} to {entry.item.endDate}</p>
                                       </div>
                                     )}
                                     {entry.type === 'work' && (
                                       <div>
-                                        <p className="font-semibold">{entry.item.title} at {entry.item.company}</p>
+                                        <p className="font-medium text-sm">{entry.item.title} at {entry.item.company}</p>
                                         <p className="text-xs">{entry.item.location}, {entry.item.startDate}–{entry.item.endDate}</p>
                                       </div>
                                     )}
                                     {entry.type === 'skills' && (
-                                      <p className="text-sm text-gray-700">{entry.item.name} · {entry.item.level}</p>
+                                      <p className="text-xs text-gray-700">{entry.item.name} · {entry.item.level}</p>
                                     )}
                                     {entry.type === 'links' && (
-                                      <p className="text-sm">
+                                      <p className="text-xs">
                                         <strong>{entry.item.label}:</strong> {entry.item.url}
                                       </p>
                                     )}
                                     {entry.type === 'additional' && (
-                                      <p>
+                                      <p className="text-xs">
                                         <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                                       </p>
                                     )}
