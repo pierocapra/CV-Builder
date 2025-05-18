@@ -99,15 +99,23 @@ import {
             <div className="flex flex-wrap justify-center gap-2 text-sm">
               {Object.entries(cvData.personal)
                 .filter(([key]) => !['firstName', 'lastName', 'title'].includes(key))
-                .map(([key, value]) => (
-                  <div
-                    key={key}
-                    className={`flex items-center px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-sm border ${accentClasses[color]} border-opacity-20`}
-                  >
-                    <span className="capitalize font-medium mr-1">{key}:</span>
-                    <span className="opacity-90">{value}</span>
-                  </div>
-                ))}
+                .map(([key, value]) => {
+                  if (key === 'dateOfBirth') {
+                    console.log('Date value:', value);
+                    console.log('Formatted date:', new Date(value).toLocaleString('en-US', { month: 'long', year: 'numeric' }));
+                  }
+                  return (
+                    <div
+                      key={key}
+                      className={`flex items-center px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-sm border ${accentClasses[color]} border-opacity-20`}
+                    >
+                      <span className="capitalize font-medium mr-1">{key}:</span>
+                      <span className="opacity-90">
+                        {formatCvValue(key, value)}
+                      </span>
+                    </div>
+                  );
+                })}
             </div>
 
             {/* Summary */}
@@ -154,7 +162,12 @@ import {
                                   <div>
                                     <div className="flex items-baseline justify-between mb-0.5">
                                       <p className="font-semibold text-base">{entry.item.degree} in {entry.item.field}</p>
-                                      <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
+                                      <p className="text-xs text-gray-500">
+                                        {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                          entry.item.endDate === 'Present' ? 'Present' :
+                                          new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                        }
+                                      </p>
                                     </div>
                                     <p className="text-sm text-gray-600 italic">{entry.item.school}, {entry.item.location}</p>
                                   </div>
@@ -163,7 +176,12 @@ import {
                                   <div>
                                     <div className="flex items-baseline justify-between mb-0.5">
                                       <p className="font-semibold text-base">{entry.item.title} at {entry.item.company}</p>
-                                      <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
+                                      <p className="text-xs text-gray-500">
+                                        {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                          entry.item.endDate === 'Present' ? 'Present' :
+                                          new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                        }
+                                      </p>
                                     </div>
                                     <p className="text-sm text-gray-600 italic mb-1">{entry.item.location}</p>
                                     <p className="text-sm text-gray-700">{entry.item.description}</p>

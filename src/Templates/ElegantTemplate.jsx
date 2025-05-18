@@ -50,7 +50,10 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
             {Object.entries(cvData.personal)
               .filter(([key]) => key !== 'firstName' && key !== 'lastName')
               .map(([key, value]) => (
-                <p key={key} className="text-sm"><strong>{key}:</strong> {value}</p>
+                <p key={key} className="text-sm">
+                  <strong>{key}:</strong>{' '}
+                  {formatCvValue(key, value)}
+                </p>
               ))}
           </div>
         </header>
@@ -104,14 +107,24 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                                   <div>
                                     <h3 className="font-semibold text-base">{entry.item.degree} in {entry.item.field}</h3>
                                     <p className="italic text-sm">{entry.item.school}, {entry.item.location}</p>
-                                    <p className="text-xs text-gray-600">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-xs text-gray-600">
+                                      {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                        entry.item.endDate === 'Present' ? 'Present' :
+                                        new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                      }
+                                    </p>
                                   </div>
                                 )}
                                 {entry.type === 'work' && (
                                   <div>
                                     <h3 className="font-semibold text-base">{entry.item.title}</h3>
                                     <p className="italic text-sm">{entry.item.company}, {entry.item.location}</p>
-                                    <p className="text-xs text-gray-600">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-xs text-gray-600">
+                                      {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                        entry.item.endDate === 'Present' ? 'Present' :
+                                        new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                      }
+                                    </p>
                                     <p className="text-sm mt-1">{entry.item.description}</p>
                                   </div>
                                 )}

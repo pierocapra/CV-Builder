@@ -9,6 +9,7 @@ import LinksManager from '../Components/LinksManager';
 import CvAssemble from "./CvAssemble";
 import { useCv } from '../Utils/cvHooks';
 import Spinner from '../Components/Spinner';
+import { formatDate } from '../Utils/formatters';
 
 function AddEdit() {
   const { 
@@ -96,7 +97,7 @@ function AddEdit() {
             <h2 className="text-2xl font-bold mb-4">Additional Information</h2>
             {additionalInfo ? (
               <div className="bg-white shadow-md rounded p-6">
-                <p><strong>Date of Birth:</strong> {additionalInfo.dateOfBirth}</p>
+                <p><strong>Date of Birth:</strong> {formatDate(additionalInfo.dateOfBirth)}</p>
                 <p><strong>Eligible To Work In The Uk:</strong> {additionalInfo.eligibleToWorkInUk ? 'Yes' : 'No'}</p>
                 <p><strong>Driving License:</strong> {additionalInfo.hasDrivingLicense ? 'Yes' : 'No'}</p>
                 <p className="mt-4"><strong>Summary:</strong> {additionalInfo.summary}</p>
@@ -135,7 +136,7 @@ function AddEdit() {
                       <h3 className="text-lg font-semibold">{edu.degree} in {edu.field}</h3>
                       <p className="text-gray-700">{edu.school}, {edu.location}</p>
                       <p className="text-sm text-gray-500">
-                        {edu.startDate} – {edu.endDate}
+                        {formatDate(edu.startDate)} – {edu.endDate === 'Present' ? 'Present' : formatDate(edu.endDate)}
                       </p>
                       <div className="flex gap-3 mt-4">
                         <button
@@ -195,7 +196,9 @@ function AddEdit() {
                     <li key={index} className="bg-white shadow p-4 rounded relative">
                       <h3 className="text-lg font-semibold">{job.title} at {job.company}</h3>
                       <p className="text-gray-700">{job.location}</p>
-                      <p className="text-sm text-gray-500">{job.startDate} – {job.endDate}</p>
+                      <p className="text-sm text-gray-500">
+                        {formatDate(job.startDate)} – {job.endDate === 'Present' ? 'Present' : formatDate(job.endDate)}
+                      </p>
                       {job.description && <p className="mt-2">{job.description}</p>}
                       
                       <div className="flex gap-3 mt-4">

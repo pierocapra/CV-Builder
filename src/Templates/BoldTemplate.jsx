@@ -80,7 +80,9 @@ import {
                 .map(([key, value]) => (
                   <p key={key} className="flex items-center">
                     <span className="capitalize font-semibold mr-1">{key}:</span>
-                    <span className="opacity-90">{value}</span>
+                    <span className="opacity-90">
+                      {formatCvValue(key, value)}
+                    </span>
                   </p>
                 ))}
             </div>
@@ -122,14 +124,24 @@ import {
                                   <div>
                                     <p className="font-semibold text-base">{entry.item.degree} in {entry.item.field}</p>
                                     <p className="italic text-sm">{entry.item.school}, {entry.item.location}</p>
-                                    <p className="text-xs text-gray-600">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-xs text-gray-600">
+                                      {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                        entry.item.endDate === 'Present' ? 'Present' :
+                                        new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                      }
+                                    </p>
                                   </div>
                                 )}
                                 {entry.type === 'work' && (
                                   <div>
                                     <p className="font-semibold text-base">{entry.item.title} at {entry.item.company}</p>
                                     <p className="italic text-sm">{entry.item.location}</p>
-                                    <p className="text-xs text-gray-600">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-xs text-gray-600">
+                                      {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                        entry.item.endDate === 'Present' ? 'Present' :
+                                        new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                      }
+                                    </p>
                                     <p className="text-sm mt-1">{entry.item.description}</p>
                                   </div>
                                 )}

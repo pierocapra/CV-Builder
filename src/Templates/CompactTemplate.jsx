@@ -42,7 +42,9 @@ import {
               {Object.entries(cvData.personal)
                 .filter(([key]) => key !== 'firstName' && key !== 'lastName')
                 .map(([key, value]) => (
-                  <p key={key}>{key}: {value}</p>
+                  <p key={key}>
+                    {key}: {formatCvValue(key, value)}
+                  </p>
                 ))}
             </div>
           </header>
@@ -82,13 +84,21 @@ import {
                                     {entry.type === 'education' && (
                                       <div>
                                         <p className="font-medium text-sm">{entry.item.degree}</p>
-                                        <p className="text-xs">{entry.item.school} – {entry.item.startDate} to {entry.item.endDate}</p>
+                                        <p className="text-xs">{entry.item.school} – {
+                                          new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} to {
+                                          entry.item.endDate === 'Present' ? 'Present' :
+                                          new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                        }</p>
                                       </div>
                                     )}
                                     {entry.type === 'work' && (
                                       <div>
                                         <p className="font-medium text-sm">{entry.item.title} at {entry.item.company}</p>
-                                        <p className="text-xs">{entry.item.location}, {entry.item.startDate}–{entry.item.endDate}</p>
+                                        <p className="text-xs">{entry.item.location}, {
+                                          new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                          entry.item.endDate === 'Present' ? 'Present' :
+                                          new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                        }</p>
                                       </div>
                                     )}
                                     {entry.type === 'skills' && (

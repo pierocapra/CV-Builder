@@ -45,7 +45,8 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
               .filter(([key]) => !['firstName', 'lastName', 'title'].includes(key))
               .map(([key, value]) => (
                 <p key={key} className="text-sm">
-                  <strong className="capitalize">{key}:</strong> {value}
+                  <strong className="capitalize">{key}:</strong>{' '}
+                  {formatCvValue(key, value)}
                 </p>
               ))}
           </div>
@@ -93,14 +94,24 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                                   <>
                                     <h3 className="font-medium text-base">{entry.item.degree} in {entry.item.field}</h3>
                                     <p className="text-sm">{entry.item.school}, {entry.item.location}</p>
-                                    <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-xs text-gray-500">
+                                      {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                        entry.item.endDate === 'Present' ? 'Present' :
+                                        new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                      }
+                                    </p>
                                   </>
                                 )}
                                 {entry.type === 'work' && (
                                   <>
                                     <h3 className="font-medium text-base">{entry.item.title}</h3>
                                     <p className="text-sm">{entry.item.company}, {entry.item.location}</p>
-                                    <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="text-xs text-gray-500">
+                                      {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {
+                                        entry.item.endDate === 'Present' ? 'Present' :
+                                        new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
+                                      }
+                                    </p>
                                     <p className="mt-1 text-sm">{entry.item.description}</p>
                                   </>
                                 )}
