@@ -8,6 +8,7 @@ import {
   } from '@dnd-kit/sortable';
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
+  import { formatCvValue, formatFieldName } from "../Utils/formatters";
   
   const CompactTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headingClasses = {
@@ -74,7 +75,7 @@ import {
                                   </a>
                                 )}
                                 {entry.type === 'additional' && (
-                                  <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
+                                  <p><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</p>
                                 )}
                               </li>
                             </SortableItem>

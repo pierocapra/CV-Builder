@@ -19,6 +19,7 @@ import CreativeTemplate from "../Templates/CreativeTemplate";
 import BoldTemplate from "../Templates/BoldTemplate";
 import { useAuth } from '../Utils/AuthContext';
 import CustomDropdown from '../Components/CustomDropdown';
+import { formatFieldName, formatCvValue } from '../Utils/formatters';
 
 // Template options
 const templateOptions = [
@@ -173,7 +174,9 @@ function CvAssemble({ cvData: initialCvData }) {
                   checked={selectedItems.some(i => i.type === 'additional' && i.item.key === key)}
                   className="form-checkbox"
                 />
-                <span className="text-sm">{key}: {cvData.additional[key]}</span>
+                <span className="text-sm">
+                  {formatFieldName(key)}: {formatCvValue(key, cvData.additional[key])}
+                </span>
               </label>
             </div>
           ))}

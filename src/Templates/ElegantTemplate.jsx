@@ -9,6 +9,7 @@ import {
   ;
 import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
+import { formatCvValue, formatFieldName } from "../Utils/formatters";
 
 const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder, color}) => {
   const textClasses = {
@@ -76,7 +77,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                     <SortableItem key={entry.id} id={entry.id}>
                       <div className={`border-l-4 ${borderClasses[color]}  pl-4 py-2 hover:bg-indigo-50 rounded`}>
                         {entry.type === 'additional' && (
-                          <p><strong>{entry.item.key}:</strong> {entry.item.value}</p>
+                          <p><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</p>
                         )}
                         {entry.type === 'education' && (
                           <div>

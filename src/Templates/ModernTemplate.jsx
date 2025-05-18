@@ -9,6 +9,7 @@ import {
   ;
 import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
+import { formatCvValue, formatFieldName } from "../Utils/formatters";
 
 const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
   const textClasses = {
@@ -87,7 +88,9 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                         <p className="text-sm">{entry.item.name} ({entry.item.level})</p>
                       )}
                       {entry.type === 'additional' && (
-                        <p className="text-sm"><strong>{entry.item.key}:</strong> {entry.item.value}</p>
+                        <p className="text-sm">
+                          <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
+                        </p>
                       )}
                       {entry.type === 'links' && (
                         <a
