@@ -96,7 +96,7 @@ import {
                                   </div>
                                 )}
                                 {entry.type === 'skills' && (
-                                  <p><strong>{entry.item.name}</strong> – {entry.item.level}</p>
+                                  <p className="text-sm text-gray-700">{entry.item.name} • {entry.item.level}</p>
                                 )}
                                 {entry.type === 'links' && (
                                   <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className={`${textClasses[color]} text-lg underline`}>

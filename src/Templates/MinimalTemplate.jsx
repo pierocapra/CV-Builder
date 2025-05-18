@@ -10,6 +10,17 @@ import {
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
   
+  const renderSkills = (skills) => (
+    <div className="flex flex-wrap gap-2 items-center">
+      {skills.map((entry, index) => (
+        <span key={entry.id} className="text-sm text-gray-700">
+          {entry.item.name} · {entry.item.level}
+          {index < skills.length - 1 && <span className="mx-2 text-gray-400">|</span>}
+        </span>
+      ))}
+    </div>
+  );
+  
   const MinimalTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const textClasses = {
       gray: 'text-gray-500',
@@ -49,47 +60,51 @@ import {
                     ) : (
                       <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2`}>Additional Info</h2>
                     )}
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
-                      <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
-                        <div className="space-y-2">
-                          {groupedItems[sectionKey].map((entry) => (
-                            <SortableItem key={entry.id} id={entry.id}>
-                              <div className="px-3 py-2 bg-white border-l-2 border-gray-300 hover:shadow-sm hover:bg-gray-50 transition">
-                                {entry.type === 'education' && (
-                                  <div>
-                                    <p className="font-semibold">{entry.item.degree} in {entry.item.field}</p>
-                                    <p className="text-sm text-gray-600">{entry.item.school}, {entry.item.location}</p>
-                                  </div>
-                                )}
-                                {entry.type === 'work' && (
-                                  <div>
-                                    <p className="font-semibold">{entry.item.title}</p>
-                                    <p className="text-sm text-gray-600">{entry.item.company}</p>
-                                    <p className="text-sm">{entry.item.description}</p>
-                                  </div>
-                                )}
-                                {entry.type === 'skills' && (
-                                  <p>{entry.item.name} – {entry.item.level}</p>
-                                )}
-                                {entry.type === 'links' && (
-                                  <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                                    {entry.item.label}
-                                  </a>
-                                )}
-                                {entry.type === 'summary' && (
-                                  <p className="text-gray-700 leading-relaxed italic">{entry.item.value}</p>
-                                )}
-                                {entry.type === 'additional' && (
-                                  <p>
-                                    <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
-                                  </p>
-                                )}
-                              </div>
-                            </SortableItem>
-                          ))}
-                        </div>
-                      </SortableContext>
-                    </DndContext>
+                    {sectionKey === 'skills' ? (
+                      renderSkills(groupedItems[sectionKey])
+                    ) : (
+                      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
+                        <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
+                          <div className="space-y-2">
+                            {groupedItems[sectionKey].map((entry) => (
+                              <SortableItem key={entry.id} id={entry.id}>
+                                <div className="px-3 py-2 bg-white border-l-2 border-gray-300 hover:shadow-sm hover:bg-gray-50 transition">
+                                  {entry.type === 'education' && (
+                                    <div>
+                                      <p className="font-semibold">{entry.item.degree} in {entry.item.field}</p>
+                                      <p className="text-sm text-gray-600">{entry.item.school}, {entry.item.location}</p>
+                                    </div>
+                                  )}
+                                  {entry.type === 'work' && (
+                                    <div>
+                                      <p className="font-semibold">{entry.item.title}</p>
+                                      <p className="text-sm text-gray-600">{entry.item.company}</p>
+                                      <p className="text-sm">{entry.item.description}</p>
+                                    </div>
+                                  )}
+                                  {entry.type === 'skills' && (
+                                    <p className="text-sm text-gray-700">{entry.item.name} • {entry.item.level}</p>
+                                  )}
+                                  {entry.type === 'links' && (
+                                    <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                      {entry.item.label}
+                                    </a>
+                                  )}
+                                  {entry.type === 'summary' && (
+                                    <p className="text-gray-700 leading-relaxed italic">{entry.item.value}</p>
+                                  )}
+                                  {entry.type === 'additional' && (
+                                    <p>
+                                      <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
+                                    </p>
+                                  )}
+                                </div>
+                              </SortableItem>
+                            ))}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    )}
                   </div>
                 </SortableSection>
               ) : null

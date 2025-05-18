@@ -20,6 +20,17 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
     cyan: 'text-cyan-700',
   };
   
+  const renderSkills = (skills) => (
+    <div className="flex flex-wrap gap-2 items-center">
+      {skills.map((entry, index) => (
+        <span key={entry.id} className="text-sm text-gray-700">
+          {entry.item.name} · {entry.item.level}
+          {index < skills.length - 1 && <span className="mx-2 text-gray-400">|</span>}
+        </span>
+      ))}
+    </div>
+  );
+
   return (
     <div className="bg-white p-8 text-gray-800">
       {/* Header */}
@@ -50,75 +61,74 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
             items={sectionOrder}
             strategy={verticalListSortingStrategy}
         >
-
             {sectionOrder.map((sectionKey) =>
-        groupedItems[sectionKey]?.length ? (
-            <SortableSection key={sectionKey} id={sectionKey}>
-          <div className="mb-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
-            {sectionKey !== 'additional' ? (
-              <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3 capitalize`}>{sectionKey}</h2>
-            ) : (
-              <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3`}>Additional Info</h2>
-            )}
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleDragEnd(event, sectionKey)}
-            >
-              <SortableContext
-                items={groupedItems[sectionKey].map((item) => item.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                {groupedItems[sectionKey].map((entry) => (
-                  <SortableItem key={entry.id} id={entry.id}>
-                    <div className="relative pb-4 mb-1 mt-1 hover:bg-gray-50 transition">
+              groupedItems[sectionKey]?.length ? (
+                <SortableSection key={sectionKey} id={sectionKey}>
+                  <div className="mb-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                    {sectionKey !== 'additional' ? (
+                      <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3 capitalize`}>{sectionKey}</h2>
+                    ) : (
+                      <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3`}>Additional Info</h2>
+                    )}
 
-                      {entry.type === 'education' && (
-                        <>
-                          <h3 className="font-medium">{entry.item.degree} in {entry.item.field}</h3>
-                          <p className="text-sm">{entry.item.school}, {entry.item.location}</p>
-                          <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
-                        </>
-                      )}
-                      {entry.type === 'work' && (
-                        <>
-                          <h3 className="font-medium">{entry.item.title}</h3>
-                          <p className="text-sm">{entry.item.company}, {entry.item.location}</p>
-                          <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
-                          <p className="mt-1 text-sm">{entry.item.description}</p>
-                        </>
-                      )}
-                      {entry.type === 'skills' && (
-                        <p className="text-sm">{entry.item.name} ({entry.item.level})</p>
-                      )}
-                      {entry.type === 'summary' && (
-                        <p className="text-base leading-relaxed text-gray-700 italic">{entry.item.value}</p>
-                      )}
-                      {entry.type === 'links' && (
-                        <a
-                          href={entry.item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:underline"
+                    {sectionKey === 'skills' ? (
+                      renderSkills(groupedItems[sectionKey])
+                    ) : (
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={(event) => handleDragEnd(event, sectionKey)}
+                      >
+                        <SortableContext
+                          items={groupedItems[sectionKey].map(item => item.id)}
+                          strategy={verticalListSortingStrategy}
                         >
-                          {entry.item.label}
-                        </a>
-                      )}
-                      {entry.type === 'additional' && (
-                        <p className="text-sm">
-                          <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
-                        </p>
-                      )}
-                    </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
-        </SortableSection>) : null)}
-    </SortableContext>
-        </DndContext>
-                </div>
+                          {groupedItems[sectionKey].map((entry) => (
+                            <SortableItem key={entry.id} id={entry.id}>
+                              <div className="relative pb-4 mb-1 mt-1 hover:bg-gray-50 transition">
+                                {entry.type === 'education' && (
+                                  <>
+                                    <h3 className="font-medium">{entry.item.degree} in {entry.item.field}</h3>
+                                    <p className="text-sm">{entry.item.school}, {entry.item.location}</p>
+                                    <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
+                                  </>
+                                )}
+                                {entry.type === 'work' && (
+                                  <>
+                                    <h3 className="font-medium">{entry.item.title}</h3>
+                                    <p className="text-sm">{entry.item.company}, {entry.item.location}</p>
+                                    <p className="text-xs text-gray-500">{entry.item.startDate} – {entry.item.endDate}</p>
+                                    <p className="mt-1 text-sm">{entry.item.description}</p>
+                                  </>
+                                )}
+                                {entry.type === 'links' && (
+                                  <a
+                                    href={entry.item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-blue-600 hover:underline"
+                                  >
+                                    {entry.item.label}
+                                  </a>
+                                )}
+                                {entry.type === 'additional' && (
+                                  <p className="text-sm">
+                                    <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
+                                  </p>
+                                )}
+                              </div>
+                            </SortableItem>
+                          ))}
+                        </SortableContext>
+                      </DndContext>
+                    )}
+                  </div>
+                </SortableSection>
+              ) : null
+            )}
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 };
 
