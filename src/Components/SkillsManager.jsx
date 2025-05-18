@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Utils/AuthContext';
 import { useCv } from '../Utils/cvHooks';
+import Spinner from './Spinner';
 
 export default function SkillsManager({ onClose, existingEntry = null, index = null }) {
   const { user, saveData } = useAuth();
   const { skills, setSkills } = useCv();
+  const [isSaving, setIsSaving] = useState(false);
 
   const [entry, setEntry] = useState(
     existingEntry || {
@@ -31,6 +33,7 @@ export default function SkillsManager({ onClose, existingEntry = null, index = n
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       const updated = [...skills];
       
@@ -51,6 +54,8 @@ export default function SkillsManager({ onClose, existingEntry = null, index = n
     } catch (error) {
       console.error(error);
       setError(error.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -70,6 +75,7 @@ export default function SkillsManager({ onClose, existingEntry = null, index = n
           onChange={handleChange}
           className="border p-2 rounded w-full"
           required
+          disabled={isSaving}
         />
       </div>
       <div>
@@ -83,6 +89,7 @@ export default function SkillsManager({ onClose, existingEntry = null, index = n
           onChange={handleChange}
           className="border p-2 rounded w-full"
           required
+          disabled={isSaving}
         >
           <option value="">Select Level</option>
           <option value="Beginner">Beginner</option>
@@ -93,8 +100,10 @@ export default function SkillsManager({ onClose, existingEntry = null, index = n
       </div>
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2"
+        disabled={isSaving}
       >
+        {isSaving ? <Spinner size="sm" color="white" /> : null}
         {index !== null ? 'Update Skill' : 'Add Skill'}
       </button>
     </form>

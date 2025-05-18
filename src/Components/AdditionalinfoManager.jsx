@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Utils/AuthContext';
 import { useCv } from '../Utils/cvHooks';
+import Spinner from './Spinner';
 
 export default function AdditionalInfoManager({ onClose }) {
   const { user, saveData } = useAuth();
   const { additionalInfo, setAdditionalInfo } = useCv();
+  const [isSaving, setIsSaving] = useState(false);
 
   const [formData, setFormData] = useState({
     dateOfBirth: '',
@@ -31,6 +33,7 @@ export default function AdditionalInfoManager({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       if (user?.uid) {
         await saveData('additionalInfo', formData);
@@ -42,6 +45,8 @@ export default function AdditionalInfoManager({ onClose }) {
     } catch (error) {
       console.error(error);
       setError(error.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -61,6 +66,7 @@ export default function AdditionalInfoManager({ onClose }) {
             value={formData.dateOfBirth}
             onChange={handleChange}
             className="border p-2 rounded w-full"
+            disabled={isSaving}
           />
         </div>
 
@@ -72,6 +78,7 @@ export default function AdditionalInfoManager({ onClose }) {
               checked={formData.eligibleToWorkInUk}
               onChange={handleChange}
               className="w-4 h-4"
+              disabled={isSaving}
             />
             <span>Eligible to work in the UK</span>
           </label>
@@ -85,6 +92,7 @@ export default function AdditionalInfoManager({ onClose }) {
               checked={formData.hasDrivingLicense}
               onChange={handleChange}
               className="w-4 h-4"
+              disabled={isSaving}
             />
             <span>Has Driving License</span>
           </label>
@@ -101,13 +109,16 @@ export default function AdditionalInfoManager({ onClose }) {
             onChange={handleChange}
             placeholder="e.g. A highly motivated software developer with experience in React and Node.js..."
             className="border p-2 rounded w-full h-24"
+            disabled={isSaving}
           />
         </div>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center justify-center gap-2"
+          disabled={isSaving}
         >
+          {isSaving ? <Spinner size="sm" color="white" /> : null}
           Save
         </button>
       </form>

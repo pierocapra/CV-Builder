@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Utils/AuthContext';
 import { useCv } from '../Utils/cvHooks';
+import Spinner from './Spinner';
 
 export default function PersonalInfoManager({ onClose }) {
   const { user, saveData } = useAuth();
   const { personalInfo, setPersonalInfo } = useCv();
+  const [isSaving, setIsSaving] = useState(false);
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -34,6 +36,7 @@ export default function PersonalInfoManager({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       if (user?.uid) {
         await saveData('personalInfo', formData);
@@ -45,6 +48,8 @@ export default function PersonalInfoManager({ onClose }) {
     } catch (error) {
       console.error(error);
       setError(error.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -66,6 +71,7 @@ export default function PersonalInfoManager({ onClose }) {
               value={formData[field]}
               onChange={handleChange}
               className="border p-2 rounded w-full text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              disabled={isSaving}
             />
           </div>
         ))}
@@ -73,8 +79,10 @@ export default function PersonalInfoManager({ onClose }) {
         <div className="pt-2">
           <button
             type="submit"
-            className="w-full md:w-auto bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            className="w-full md:w-auto bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            disabled={isSaving}
           >
+            {isSaving ? <Spinner size="sm" color="white" /> : null}
             Save
           </button>
         </div>

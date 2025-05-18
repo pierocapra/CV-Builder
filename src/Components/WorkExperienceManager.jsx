@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../Utils/AuthContext';
 import { useCv } from '../Utils/cvHooks';
+import Spinner from './Spinner';
 
 export default function WorkExperienceManager({ onClose, existingEntry = null, index = null }) {
   const { user, saveData } = useAuth();
   const { workExperience, setWorkExperience } = useCv();
+  const [isSaving, setIsSaving] = useState(false);
 
   const [entry, setEntry] = useState(
     existingEntry || {
@@ -26,6 +28,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       const updated = [...workExperience];
       
@@ -46,6 +49,8 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
     } catch (error) {
       console.error(error);
       setError(error.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -65,6 +70,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           onChange={handleChange}
           className="border p-2 rounded w-full"
           required
+          disabled={isSaving}
         />
       </div>
       <div>
@@ -80,6 +86,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           onChange={handleChange}
           className="border p-2 rounded w-full"
           required
+          disabled={isSaving}
         />
       </div>
       <div>
@@ -94,6 +101,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           value={entry.location}
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          disabled={isSaving}
         />
       </div>
       <div>
@@ -107,6 +115,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           value={entry.startDate}
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          disabled={isSaving}
         />
       </div>
       <div>
@@ -120,6 +129,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           value={entry.endDate}
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          disabled={isSaving}
         />
       </div>
       <div>
@@ -133,12 +143,15 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           onChange={handleChange}
           placeholder="Describe your responsibilities and achievements..."
           className="border p-2 rounded w-full h-32"
+          disabled={isSaving}
         />
       </div>
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2"
+        disabled={isSaving}
       >
+        {isSaving ? <Spinner size="sm" color="white" /> : null}
         {index !== null ? 'Update Experience' : 'Add Experience'}
       </button>
     </form>

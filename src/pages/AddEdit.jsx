@@ -8,10 +8,13 @@ import SkillsManager from '../Components/SkillsManager';
 import LinksManager from '../Components/LinksManager';
 import CvAssemble from "./CvAssemble";
 import { useCv } from '../Utils/cvHooks';
+import Spinner from '../Components/Spinner';
 
 function AddEdit() {
   const { 
     assemble,
+    isLoading,
+    isSaving,
     personalInfo,
     additionalInfo,
     education,
@@ -34,6 +37,19 @@ function AddEdit() {
   const [isLinksModalOpen, setIsLinksModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="xl" />
+      </div>
+    );
+  }
+
+  const handleDeleteWithFeedback = async (...args) => {
+    if (isSaving) return;
+    await handleDelete(...args);
+  };
+
   return (
     <>
       {assemble ? (
@@ -53,8 +69,10 @@ function AddEdit() {
                 <p><strong>Country:</strong> {personalInfo.country}</p>
                 <button
                   onClick={() => setIsPersonalInfoOpen(true)}
-                  className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Edit Personal Info
                 </button>
               </div>
@@ -63,8 +81,10 @@ function AddEdit() {
                 <p className="text-gray-600 mb-4">No personal info found. Start building your CV!</p>
                 <button
                   onClick={() => setIsPersonalInfoOpen(true)}
-                  className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add Personal Info
                 </button>
               </div>
@@ -82,8 +102,10 @@ function AddEdit() {
                 <p className="mt-4"><strong>Summary:</strong> {additionalInfo.summary}</p>
                 <button
                   onClick={() => setIsAdditionalInfoOpen(true)}
-                  className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Edit Additional Info
                 </button>
               </div>
@@ -92,8 +114,10 @@ function AddEdit() {
                 <p className="text-gray-600 mb-4">No additional info found. Add them here!</p>
                 <button
                   onClick={() => setIsAdditionalInfoOpen(true)}
-                  className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add Additional Information
                 </button>
               </div>
@@ -119,14 +143,18 @@ function AddEdit() {
                             setEditingEducation({ entry: edu, index });
                             setIsEducationModalOpen(true);
                           }}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" /> : null}
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('education', education, index)}
-                          className="text-red-600 hover:underline"
+                          onClick={() => handleDeleteWithFeedback('education', education, index)}
+                          className="text-red-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" color="red" /> : null}
                           Delete
                         </button>
                       </div>
@@ -135,8 +163,10 @@ function AddEdit() {
                 </ul>
                 <button
                   onClick={() => setIsEducationModalOpen(true)}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center gap-2"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add More Education
                 </button>
               </>
@@ -145,8 +175,10 @@ function AddEdit() {
                 <p className="text-gray-600 mb-2">No education history added yet.</p>
                 <button
                   onClick={() => setIsEducationModalOpen(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add Education
                 </button>
               </div>
@@ -172,14 +204,18 @@ function AddEdit() {
                             setEditingWork({ entry: job, index });
                             setIsWorkModalOpen(true);
                           }}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" /> : null}
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('workExperience', workExperience, index)}
-                          className="text-red-600 hover:underline"
+                          onClick={() => handleDeleteWithFeedback('workExperience', workExperience, index)}
+                          className="text-red-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" color="red" /> : null}
                           Delete
                         </button>
                       </div>
@@ -189,8 +225,10 @@ function AddEdit() {
 
                 <button
                   onClick={() => setIsWorkModalOpen(true)}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center gap-2"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add More Experience
                 </button>
               </>
@@ -199,8 +237,10 @@ function AddEdit() {
                 <p className="text-gray-600 mb-2">No work experience added yet.</p>
                 <button
                   onClick={() => setIsWorkModalOpen(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add Experience
                 </button>
               </div>
@@ -222,14 +262,18 @@ function AddEdit() {
                             setEditingSkill({ entry: skill, index });
                             setIsSkillsModalOpen(true);
                           }}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" /> : null}
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('skills', skills, index)}
-                          className="text-red-600 hover:underline"
+                          onClick={() => handleDeleteWithFeedback('skills', skills, index)}
+                          className="text-red-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" color="red" /> : null}
                           Delete
                         </button>
                       </div>
@@ -238,8 +282,10 @@ function AddEdit() {
                 </ul>
                 <button
                   onClick={() => setIsSkillsModalOpen(true)}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center gap-2"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add More Skills
                 </button>
               </>
@@ -248,8 +294,10 @@ function AddEdit() {
                 <p className="text-gray-600 mb-2">No skills added yet.</p>
                 <button
                   onClick={() => setIsSkillsModalOpen(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add Skill
                 </button>
               </div>
@@ -273,14 +321,18 @@ function AddEdit() {
                             setEditingLink({ entry: link, index });
                             setIsLinksModalOpen(true);
                           }}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" /> : null}
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete('links', links, index)}
-                          className="text-red-600 hover:underline"
+                          onClick={() => handleDeleteWithFeedback('links', links, index)}
+                          className="text-red-600 hover:underline flex items-center gap-2"
+                          disabled={isSaving}
                         >
+                          {isSaving ? <Spinner size="sm" color="red" /> : null}
                           Delete
                         </button>
                       </div>
@@ -289,8 +341,10 @@ function AddEdit() {
                 </ul>
                 <button
                   onClick={() => setIsLinksModalOpen(true)}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center gap-2"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add More Links
                 </button>
               </>
@@ -299,8 +353,10 @@ function AddEdit() {
                 <p className="text-gray-600 mb-2">No links added yet.</p>
                 <button
                   onClick={() => setIsLinksModalOpen(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
+                  disabled={isSaving}
                 >
+                  {isSaving ? <Spinner size="sm" color="white" /> : null}
                   Add Links
                 </button>
               </div>
@@ -311,7 +367,7 @@ function AddEdit() {
 
       {/* Modals */}
       <Modal isOpen={isPersonalInfoOpen} onClose={() => setIsPersonalInfoOpen(false)}>
-        <PersonalInfoManager personalInfo={personalInfo} onClose={() => setIsPersonalInfoOpen(false)} />
+        <PersonalInfoManager onClose={() => setIsPersonalInfoOpen(false)} />
       </Modal>
 
       <Modal isOpen={isAdditionalInfoOpen} onClose={() => setIsAdditionalInfoOpen(false)}>
