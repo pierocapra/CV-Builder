@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { getDatabase, ref, get, set } from 'firebase/database';
 import app from '../firebase';
@@ -110,6 +111,10 @@ class AuthService {
       await this.logout();
     }
     storageService.setStorageType(StorageType.LOCAL_STORAGE);
+  }
+
+  async resetPassword(email) {
+    await sendPasswordResetEmail(auth, email);
   }
 
   getCurrentUser() {

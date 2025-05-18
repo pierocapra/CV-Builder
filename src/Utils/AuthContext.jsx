@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
     signup: authService.signup,
     login: authService.login,
     logout: authService.logout,
+    resetPassword: authService.resetPassword,
     switchToTryMode: authService.switchToTryMode,
     isAuthenticated: authService.isAuthenticated(),
     saveData: storageService.saveData.bind(storageService),
