@@ -91,9 +91,9 @@ import {
                                       <p className="text-sm text-gray-700">{entry.item.name} · {entry.item.level}</p>
                                     )}
                                     {entry.type === 'links' && (
-                                      <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                                        {entry.item.label}
-                                      </a>
+                                      <p className="text-sm">
+                                        <strong>{entry.item.label}:</strong> {entry.item.url}
+                                      </p>
                                     )}
                                     {entry.type === 'additional' && (
                                       <p>

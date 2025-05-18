@@ -38,6 +38,17 @@ import {
     // Filter out summary from sections to be rendered in main content
     const mainSections = sectionOrder.filter(sectionKey => sectionKey !== 'summary');
   
+    const renderSkills = (skills) => (
+      <div className="flex flex-wrap gap-2 items-center">
+        {skills.map((entry, index) => (
+          <span key={entry.id} className="text-sm text-gray-700">
+            {entry.item.name} · {entry.item.level}
+            {index < skills.length - 1 && <span className="mx-2 text-gray-400">|</span>}
+          </span>
+        ))}
+      </div>
+    );
+  
     return (
       <div className="bg-white p-10 font-sans text-gray-900">
         {/* Header */}
@@ -77,7 +88,10 @@ import {
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
                       <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
                         <div className="space-y-6">
-                          {groupedItems[sectionKey].map((entry) => (
+                          {sectionKey === 'skills' ? (
+                            renderSkills(groupedItems[sectionKey])
+                          ) : (
+                          groupedItems[sectionKey].map((entry) => (
                             <SortableItem key={entry.id} id={entry.id}>
                               <div className={`bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-gray-100 transition-all`}>
                                 {entry.type === 'education' && (
@@ -96,12 +110,12 @@ import {
                                   </div>
                                 )}
                                 {entry.type === 'skills' && (
-                                  <p className="text-sm text-gray-700">{entry.item.name} • {entry.item.level}</p>
+                                  <p className="text-sm text-gray-700">{entry.item.name} · {entry.item.level}</p>
                                 )}
                                 {entry.type === 'links' && (
-                                  <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className={`${textClasses[color]} text-lg underline`}>
-                                    {entry.item.label}
-                                  </a>
+                                  <p className="text-sm">
+                                    <strong>{entry.item.label}:</strong> {entry.item.url}
+                                  </p>
                                 )}
                                 {entry.type === 'additional' && (
                                   <p>
@@ -110,7 +124,7 @@ import {
                                 )}
                               </div>
                             </SortableItem>
-                          ))}
+                          )))}
                         </div>
                       </SortableContext>
                     </DndContext>

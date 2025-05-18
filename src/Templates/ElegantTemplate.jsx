@@ -116,9 +116,9 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                                   </div>
                                 )}
                                 {entry.type === 'links' && (
-                                  <a href={entry.item.url} target="_blank" rel="noopener noreferrer" className={`${textClasses[color]} text-lg underline`}>
-                                    {entry.item.label}
-                                  </a>
+                                  <p className="text-sm">
+                                    <strong>{entry.item.label}:</strong> {entry.item.url}
+                                  </p>
                                 )}
                               </div>
                             </SortableItem>

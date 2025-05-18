@@ -102,14 +102,9 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                                   </>
                                 )}
                                 {entry.type === 'links' && (
-                                  <a
-                                    href={entry.item.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm text-blue-600 hover:underline"
-                                  >
-                                    {entry.item.label}
-                                  </a>
+                                  <p className="text-sm">
+                                    <strong>{entry.item.label}:</strong> {entry.item.url}
+                                  </p>
                                 )}
                                 {entry.type === 'additional' && (
                                   <p className="text-sm">
