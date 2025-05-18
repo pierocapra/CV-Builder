@@ -62,7 +62,7 @@ import {
                 <SortableSection key={sectionKey} id={sectionKey}>
                   <div className={`mb-12 ${sectionClasses[color]} p-6 rounded-xl shadow-lg hover:outline hover:outline-1 hover:outline-dashed hover:outline-gray-400`}>
                     <h2 className={`text-3xl font-bold ${textClasses[color]} mb-4 capitalize`}>
-                      {sectionKey}
+                      {sectionKey === 'additional' ? 'Info' : sectionKey}
                     </h2>
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
                       <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
@@ -94,7 +94,13 @@ import {
                                   </a>
                                 )}
                                 {entry.type === 'additional' && (
-                                  <p><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</p>
+                                  <p>
+                                    {entry.item.key.toLowerCase() === 'summary' ? (
+                                      formatCvValue(entry.item.key, entry.item.value)
+                                    ) : (
+                                      <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
+                                    )}
+                                  </p>
                                 )}
                               </div>
                             </SortableItem>

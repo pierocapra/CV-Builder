@@ -60,9 +60,11 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
         groupedItems[sectionKey]?.length ? (
             <SortableSection key={sectionKey} id={sectionKey}>
           <div className="mb-10 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
-            <h2 className={`text-2xl border-b pb-1 mb-4 ${textClasses[color]} font-semibold capitalize`}>
-              {sectionKey}
-            </h2>
+            {sectionKey !== 'additional' ? (
+              <h2 className={`text-2xl border-b pb-1 mb-4 ${textClasses[color]} font-semibold capitalize`}>{sectionKey}</h2>
+            ) : (
+              <h2 className={`text-2xl border-b pb-1 mb-4 ${textClasses[color]} font-semibold`}>Additional Info</h2>
+            )}
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -77,7 +79,13 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                     <SortableItem key={entry.id} id={entry.id}>
                       <div className={`border-l-4 ${borderClasses[color]}  pl-4 py-2 hover:bg-indigo-50 rounded`}>
                         {entry.type === 'additional' && (
-                          <p><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</p>
+                          <p>
+                            {entry.item.key.toLowerCase() === 'summary' ? (
+                              formatCvValue(entry.item.key, entry.item.value)
+                            ) : (
+                              <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
+                            )}
+                          </p>
                         )}
                         {entry.type === 'education' && (
                           <div>

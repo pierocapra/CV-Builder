@@ -55,7 +55,11 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
         groupedItems[sectionKey]?.length ? (
             <SortableSection key={sectionKey} id={sectionKey}>
           <div className="mb-6 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
-            <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3 capitalize`}>{sectionKey}</h2>
+            {sectionKey !== 'additional' ? (
+              <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3 capitalize`}>{sectionKey}</h2>
+            ) : (
+              <h2 className={`text-xl font-semibold ${textClasses[color]} mb-3`}>Additional Info</h2>
+            )}
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -89,7 +93,11 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                       )}
                       {entry.type === 'additional' && (
                         <p className="text-sm">
-                          <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
+                          {entry.item.key.toLowerCase() === 'summary' ? (
+                            formatCvValue(entry.item.key, entry.item.value)
+                          ) : (
+                            <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
+                          )}
                         </p>
                       )}
                       {entry.type === 'links' && (

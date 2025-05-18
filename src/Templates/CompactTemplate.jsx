@@ -44,9 +44,11 @@ import {
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
                   <div className="mb-5 border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move">
-                    <h2 className={`text-base font-semibold uppercase tracking-wide mb-1 ${headingClasses[color]}`}>
-                      {sectionKey}
-                    </h2>
+                    {sectionKey !== 'additional' ? (
+                      <h2 className={`text-base font-semibold uppercase tracking-wide mb-1 ${headingClasses[color]}`}>{sectionKey}</h2>
+                    ) : (
+                      <h2 className={`text-base font-semibold uppercase tracking-wide mb-1 ${headingClasses[color]}`}>Additional Info</h2>
+                    )}
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
                       <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
                         <ul className="space-y-1">
@@ -75,7 +77,13 @@ import {
                                   </a>
                                 )}
                                 {entry.type === 'additional' && (
-                                  <p><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</p>
+                                  <p>
+                                    {entry.item.key.toLowerCase() === 'summary' ? (
+                                      formatCvValue(entry.item.key, entry.item.value)
+                                    ) : (
+                                      <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
+                                    )}
+                                  </p>
                                 )}
                               </li>
                             </SortableItem>
