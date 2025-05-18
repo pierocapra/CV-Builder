@@ -5,6 +5,8 @@ import { CvContext } from './cvHooks';
 export const CvProvider = ({ children }) => {
   const { user, getData, saveData } = useAuth();
   const [assemble, setAssemble] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   
   const [personalInfo, setPersonalInfo] = useState(null);
   const [additionalInfo, setAdditionalInfo] = useState(null);
@@ -27,27 +29,33 @@ export const CvProvider = ({ children }) => {
   useEffect(() => {
     // Clear existing data when auth state changes
     clearAllData();
+    setIsLoading(true);
 
     const fetchData = async () => {
       try {
         if (user?.uid) {
           // User is authenticated - fetch from Firebase
-          const personalData = await getData('personalInfo');
+          const [
+            personalData,
+            additionalData,
+            educationData,
+            workData,
+            skillsData,
+            linksData
+          ] = await Promise.all([
+            getData('personalInfo'),
+            getData('additionalInfo'),
+            getData('education'),
+            getData('workExperience'),
+            getData('skills'),
+            getData('links')
+          ]);
+
           if (personalData) setPersonalInfo(personalData);
-          
-          const additionalData = await getData('additionalInfo');
           if (additionalData) setAdditionalInfo(additionalData);
-          
-          const educationData = await getData('education');
           if (educationData) setEducation(educationData);
-          
-          const workData = await getData('workExperience');
           if (workData) setWorkExperience(workData);
-          
-          const skillsData = await getData('skills');
           if (skillsData) setSkills(skillsData);
-          
-          const linksData = await getData('links');
           if (linksData) setLinks(linksData);
         } else {
           // User is not authenticated - fetch from localStorage
@@ -67,6 +75,8 @@ export const CvProvider = ({ children }) => {
         }
       } catch (err) {
         console.error('Error fetching data:', err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -74,36 +84,45 @@ export const CvProvider = ({ children }) => {
   }, [user, getData]);
 
   const handleDelete = async (key, data, index) => {
-    const updated = [...data];
-    updated.splice(index, 1);
-    
-    if (user?.uid) {
-      await saveData(key, updated);
-    } else {
-      localStorage.setItem(key, JSON.stringify(updated));
-    }
+    setIsSaving(true);
+    try {
+      const updated = [...data];
+      updated.splice(index, 1);
+      
+      if (user?.uid) {
+        await saveData(key, updated);
+      } else {
+        localStorage.setItem(key, JSON.stringify(updated));
+      }
 
-    switch (key) {
-      case 'education':
-        setEducation(updated);
-        break;
-      case 'workExperience':
-        setWorkExperience(updated);
-        break;
-      case 'skills':
-        setSkills(updated);
-        break;
-      case 'links':
-        setLinks(updated);
-        break;
-      default:
-        break;
+      switch (key) {
+        case 'education':
+          setEducation(updated);
+          break;
+        case 'workExperience':
+          setWorkExperience(updated);
+          break;
+        case 'skills':
+          setSkills(updated);
+          break;
+        case 'links':
+          setLinks(updated);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const value = {
     assemble,
     setAssemble,
+    isLoading,
+    isSaving,
     personalInfo,
     setPersonalInfo,
     additionalInfo,
