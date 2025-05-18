@@ -312,9 +312,12 @@ function AddEdit() {
                 <ul className="space-y-4">
                   {links.map((link, index) => (
                     <li key={index} className="bg-white shadow p-4 rounded flex justify-between items-center">
-                      <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                        {link.label || link.url}
-                      </a>
+                      <div>
+                        <strong>{link.label}:</strong>{' '}
+                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          {link.url}
+                        </a>
+                      </div>
                       <div className="flex gap-3">
                         <button
                           onClick={() => {
