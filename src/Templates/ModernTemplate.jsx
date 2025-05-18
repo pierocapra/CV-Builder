@@ -91,14 +91,8 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                       {entry.type === 'skills' && (
                         <p className="text-sm">{entry.item.name} ({entry.item.level})</p>
                       )}
-                      {entry.type === 'additional' && (
-                        <p className="text-sm">
-                          {entry.item.key.toLowerCase() === 'summary' ? (
-                            formatCvValue(entry.item.key, entry.item.value)
-                          ) : (
-                            <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
-                          )}
-                        </p>
+                      {entry.type === 'summary' && (
+                        <p className="text-base leading-relaxed text-gray-700 italic">{entry.item.value}</p>
                       )}
                       {entry.type === 'links' && (
                         <a
@@ -109,6 +103,11 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                         >
                           {entry.item.label}
                         </a>
+                      )}
+                      {entry.type === 'additional' && (
+                        <p className="text-sm">
+                          <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
+                        </p>
                       )}
                     </div>
                   </SortableItem>

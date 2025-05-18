@@ -26,35 +26,45 @@ import {
       red: 'text-red-500',
       cyan: 'text-cyan-600',
     };
+
+    // Filter out summary from sections to be rendered in main content
+    const mainSections = sectionOrder.filter(sectionKey => sectionKey !== 'summary');
   
     return (
       <div className="bg-white p-8 font-serif text-gray-900">
         {/* Header */}
-        {cvData.personal && (
-          <header className={`p-6 mb-8 ${headerClasses[color]} rounded-lg text-center`}>
-            <h1 className="text-4xl font-bold tracking-tight">
-              {cvData.personal.firstName} {cvData.personal.lastName}
-            </h1>
-            <p className="mt-2 text-lg">{cvData.personal.title}</p>
-            <div className="mt-4 text-sm text-gray-100">
-              {Object.entries(cvData.personal)
-                .filter(([key]) => key !== 'firstName' && key !== 'lastName')
-                .map(([key, value]) => (
-                  <p key={key}><strong>{key}:</strong> {value}</p>
-                ))}
+        <header className={`p-6 mb-8 ${headerClasses[color]} rounded-lg text-center`}>
+          <h1 className="text-4xl font-bold tracking-tight">
+            {cvData.personal.firstName} {cvData.personal.lastName}
+          </h1>
+          <p className="mt-2 text-lg">{cvData.personal.title}</p>
+          <div className="mt-4 text-sm text-gray-100">
+            {Object.entries(cvData.personal)
+              .filter(([key]) => key !== 'firstName' && key !== 'lastName')
+              .map(([key, value]) => (
+                <p key={key}><strong>{key}:</strong> {value}</p>
+              ))}
+          </div>
+          {groupedItems.summary?.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-white/20">
+              {groupedItems.summary.map((entry) => (
+                <p key={entry.id} className="text-base leading-relaxed text-gray-100 font-light italic">
+                  {entry.item.value}
+                </p>
+              ))}
             </div>
-          </header>
-        )}
+          )}
+        </header>
   
         {/* Sections */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
-          <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
-            {sectionOrder.map((sectionKey) =>
+          <SortableContext items={mainSections} strategy={verticalListSortingStrategy}>
+            {mainSections.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-8 group border border-transparent hover:border-dashed hover:border-gray-400 rounded  hover:cursor-move rounded-lg p-4">
+                  <div className="mb-8 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded-lg p-4">
                     <h2 className={`text-2xl font-semibold ${textClasses[color]} mb-3 capitalize`}>
-                      {sectionKey === 'additional' ? 'Info' : sectionKey}
+                      {sectionKey === 'additional' ? 'Additional Info' : sectionKey}
                     </h2>
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
                       <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
@@ -87,11 +97,7 @@ import {
                                 )}
                                 {entry.type === 'additional' && (
                                   <p>
-                                    {entry.item.key.toLowerCase() === 'summary' ? (
-                                      formatCvValue(entry.item.key, entry.item.value)
-                                    ) : (
-                                      <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
-                                    )}
+                                    <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                                   </p>
                                 )}
                               </div>

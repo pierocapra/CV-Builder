@@ -35,34 +35,44 @@ import {
       cyan: 'text-cyan-600',
     };
   
+    // Filter out summary from sections to be rendered in main content
+    const mainSections = sectionOrder.filter(sectionKey => sectionKey !== 'summary');
+  
     return (
       <div className="bg-white p-10 font-sans text-gray-900">
         {/* Header */}
-        {cvData.personal && (
-          <header className={`p-8 mb-12 ${headerClasses[color]} rounded text-center`}>
-            <h1 className="text-5xl font-extrabold tracking-wide uppercase">
-              {cvData.personal.firstName} {cvData.personal.lastName}
-            </h1>
-            <p className="mt-2 text-lg italic">{cvData.personal.title}</p>
-            <div className="mt-4 text-sm text-gray-200">
-              {Object.entries(cvData.personal)
-                .filter(([key]) => key !== 'firstName' && key !== 'lastName')
-                .map(([key, value]) => (
-                  <p key={key}><strong className="capitalize">{key}:</strong> {value}</p>
-                ))}
+        <header className={`p-8 mb-12 ${headerClasses[color]} rounded text-center`}>
+          <h1 className="text-5xl font-extrabold tracking-wide uppercase">
+            {cvData.personal.firstName} {cvData.personal.lastName}
+          </h1>
+          <p className="mt-2 text-lg italic">{cvData.personal.title}</p>
+          <div className="mt-4 text-sm text-gray-200">
+            {Object.entries(cvData.personal)
+              .filter(([key]) => key !== 'firstName' && key !== 'lastName')
+              .map(([key, value]) => (
+                <p key={key}><strong className="capitalize">{key}:</strong> {value}</p>
+              ))}
+          </div>
+          {groupedItems.summary?.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-white/20">
+              {groupedItems.summary.map((entry) => (
+                <p key={entry.id} className="text-base leading-relaxed text-gray-100 font-light italic">
+                  {entry.item.value}
+                </p>
+              ))}
             </div>
-          </header>
-        )}
+          )}
+        </header>
   
         {/* CV Sections */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
-          <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
-            {sectionOrder.map((sectionKey) =>
+          <SortableContext items={mainSections} strategy={verticalListSortingStrategy}>
+            {mainSections.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
                   <div className={`mb-12 ${sectionClasses[color]} p-6 rounded-xl shadow-lg hover:outline hover:outline-1 hover:outline-dashed hover:outline-gray-400`}>
                     <h2 className={`text-3xl font-bold ${textClasses[color]} mb-4 capitalize`}>
-                      {sectionKey === 'additional' ? 'Info' : sectionKey}
+                      {sectionKey === 'additional' ? 'Additional Info' : sectionKey}
                     </h2>
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEnd(event, sectionKey)}>
                       <SortableContext items={groupedItems[sectionKey].map(item => item.id)} strategy={verticalListSortingStrategy}>
@@ -95,11 +105,7 @@ import {
                                 )}
                                 {entry.type === 'additional' && (
                                   <p>
-                                    {entry.item.key.toLowerCase() === 'summary' ? (
-                                      formatCvValue(entry.item.key, entry.item.value)
-                                    ) : (
-                                      <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
-                                    )}
+                                    <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                                   </p>
                                 )}
                               </div>

@@ -78,13 +78,12 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                   {groupedItems[sectionKey].map((entry) => (
                     <SortableItem key={entry.id} id={entry.id}>
                       <div className={`border-l-4 ${borderClasses[color]}  pl-4 py-2 hover:bg-indigo-50 rounded`}>
+                        {entry.type === 'summary' && (
+                          <p className="text-lg leading-relaxed text-gray-700 font-light italic">{entry.item.value}</p>
+                        )}
                         {entry.type === 'additional' && (
                           <p>
-                            {entry.item.key.toLowerCase() === 'summary' ? (
-                              formatCvValue(entry.item.key, entry.item.value)
-                            ) : (
-                              <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
-                            )}
+                            <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                           </p>
                         )}
                         {entry.type === 'education' && (

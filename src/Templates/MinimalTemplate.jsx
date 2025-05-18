@@ -76,13 +76,12 @@ import {
                                     {entry.item.label}
                                   </a>
                                 )}
+                                {entry.type === 'summary' && (
+                                  <p className="text-gray-700 leading-relaxed italic">{entry.item.value}</p>
+                                )}
                                 {entry.type === 'additional' && (
                                   <p>
-                                    {entry.item.key.toLowerCase() === 'summary' ? (
-                                      formatCvValue(entry.item.key, entry.item.value)
-                                    ) : (
-                                      <><strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}</>
-                                    )}
+                                    <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                                   </p>
                                 )}
                               </div>

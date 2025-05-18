@@ -47,7 +47,7 @@ function CvAssemble({ cvData: initialCvData }) {
   const [template, setTemplate] = useState('minimal');
   const [color, setColor] = useState('gray');
   const [sectionOrder, setSectionOrder] = useState([
-    'education', 'work', 'skills', 'links', 'additional'
+    'summary', 'education', 'work', 'skills', 'links', 'additional'
   ]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -162,24 +162,44 @@ function CvAssemble({ cvData: initialCvData }) {
           options={colorOptions}
         />
 
-        {/* Additional Info */}
+        {/* Summary */}
         <div className="mb-4">
-          <label className="block font-medium mb-2">Additional Info</label>
-          {Object.keys(cvData.additional || {}).map((key) => (
-            <div key={key} className="ml-2">
+          <label className="block font-medium mb-2">Summary</label>
+          {cvData.additional?.summary && (
+            <div className="ml-2">
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  onChange={() => toggleItem('additional', { key, value: cvData.additional[key] })}
-                  checked={selectedItems.some(i => i.type === 'additional' && i.item.key === key)}
+                  onChange={() => toggleItem('summary', { value: cvData.additional.summary })}
+                  checked={selectedItems.some(i => i.type === 'summary')}
                   className="form-checkbox"
                 />
-                <span className="text-sm">
-                  {formatFieldName(key)}: {formatCvValue(key, cvData.additional[key])}
-                </span>
+                <span className="text-sm">Professional Summary</span>
               </label>
             </div>
-          ))}
+          )}
+        </div>
+
+        {/* Additional Info */}
+        <div className="mb-4">
+          <label className="block font-medium mb-2">Additional Info</label>
+          {Object.entries(cvData.additional || {})
+            .filter(([key]) => key !== 'summary')
+            .map(([key, value]) => (
+              <div key={key} className="ml-2">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    onChange={() => toggleItem('additional', { key, value })}
+                    checked={selectedItems.some(i => i.type === 'additional' && i.item.key === key)}
+                    className="form-checkbox"
+                  />
+                  <span className="text-sm">
+                    {formatFieldName(key)}: {formatCvValue(key, value)}
+                  </span>
+                </label>
+              </div>
+            ))}
         </div>
 
         {/* Education */}
