@@ -25,7 +25,7 @@ const LoginPage = () => {
       }
 
   return (
-    <div className="min-h-screen md:py-12 flex items-start md:items-center justify-center px-4">
+    <div className="min-h-screen flex items-start justify-center px-4 pt-8 md:pt-16">
         <div className="w-full max-w-md bg-white md:rounded-2xl md:shadow-xl p-6 md:p-8">
           <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-700 mb-6">Login to CV Builder</h1>
 

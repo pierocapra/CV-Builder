@@ -21,16 +21,16 @@ export default function ForgotPassword() {
               setMessage("Check your inbox for instructions")
             })
             .catch(error => {
-              setError("Failed to reset password: " +error.message)
+              setError("Failed to reset password: " + error.code)
             });
           // setLoading(false)
     }
 
 
     return (
-      <div className="min-h-screen md:py-12 flex items-start md:items-center justify-center px-4">
+      <div className="min-h-screen flex items-start justify-center px-4 pt-8 md:pt-16">
         <div className="w-full max-w-md bg-white md:rounded-2xl md:shadow-xl p-6 md:p-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-700 mb-6">Forgot Password</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-700 mb-6">Reset Password</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -57,9 +57,16 @@ export default function ForgotPassword() {
             </button>
           </form>
 
-          <div className="text-sm text-center mt-6 text-gray-600">
+          <div className="text-sm text-center mt-4 text-gray-600">
+            Remember your password?{' '}
             <Link to="/login" className="text-blue-600 hover:underline">
-              Back to Login
+              Log In
+            </Link>
+          </div>
+
+          <div className="text-center mt-6">
+            <Link to="/try" className="inline-block text-blue-700 hover:text-blue-900 font-medium">
+              <h3 className="text-lg underline">Try the app without signing in</h3>
             </Link>
           </div>
         </div>
