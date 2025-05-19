@@ -1,78 +1,109 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../Utils/AuthContext';
+import { useCv } from '../Utils/cvHooks';
+import Spinner from './Spinner';
 
-export default function SkillsManager({ onClose, index = null }) {
-  const [skills, setSkills] = useState([]);
-  const [skillEntry, setSkillEntry] = useState({
-    name: '',
-    level: '',
-  });
+export default function SkillsManager({ onClose, existingEntry = null, index = null }) {
+  const { user, saveData } = useAuth();
+  const { skills, setSkills } = useCv();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const [entry, setEntry] = useState(
+    existingEntry || {
+      name: '',
+      level: '',
+    }
+  );
+
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('skills');
-    if (stored) {
-      setSkills(JSON.parse(stored));
+    if (existingEntry) {
+      setEntry(existingEntry);
     }
-    if (index !== null) {
-      const current = JSON.parse(localStorage.getItem('skills'))[index];
-      setSkillEntry(current);
-    }
-  }, [index]);
+  }, [existingEntry]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSkillEntry((prev) => ({
+    setEntry((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let updated = [...skills];
-    if (index !== null) {
-      updated[index] = skillEntry;
-    } else {
-      updated.push(skillEntry);
+    setIsSaving(true);
+    try {
+      const updated = [...skills];
+      
+      if (index !== null) {
+        updated[index] = entry;
+      } else {
+        updated.push(entry);
+      }
+
+      if (user?.uid) {
+        await saveData('skills', updated);
+      } else {
+        localStorage.setItem('skills', JSON.stringify(updated));
+      }
+      
+      setSkills(updated);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    } finally {
+      setIsSaving(false);
     }
-    localStorage.setItem('skills', JSON.stringify(updated));
-    onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && <div className="text-red-600 mb-4">{error}</div>}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Skill
+          Skill Name
         </label>
         <input
           type="text"
-          id="name"
           name="name"
-          placeholder="e.g. React.js"
-          value={skillEntry.name}
+          id="name"
+          placeholder="e.g. JavaScript"
+          value={entry.name}
           onChange={handleChange}
           className="border p-2 rounded w-full"
           required
+          disabled={isSaving}
         />
       </div>
       <div>
         <label htmlFor="level" className="block text-sm font-medium text-gray-700">
           Proficiency Level
         </label>
-        <input
-          type="text"
-          id="level"
+        <select
           name="level"
-          placeholder="e.g. Intermediate, Expert"
-          value={skillEntry.level}
+          id="level"
+          value={entry.level}
           onChange={handleChange}
           className="border p-2 rounded w-full"
-        />
+          required
+          disabled={isSaving}
+        >
+          <option value="">Select Level</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+          <option value="Expert">Expert</option>
+        </select>
       </div>
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2"
+        disabled={isSaving}
       >
+        {isSaving ? <Spinner size="sm" color="white" /> : null}
         {index !== null ? 'Update Skill' : 'Add Skill'}
       </button>
     </form>

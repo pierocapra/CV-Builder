@@ -5,13 +5,17 @@ import { initializeApp } from 'firebase/app';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyBa7r3vFH_gBbrmQF716pkxQ04HYmT4SC4',
-  authDomain: 'cv-builder-aaa92.firebaseapp.com',
-  projectId: 'cv-builder-aaa92',
-  storageBucket: 'cv-builder-aaa92.firebasestorage.app',
-  messagingSenderId: '855557284329',
-  appId: '1:855557284329:web:3050af5492b69e3a91eb78',
+  apiKey: 'AIzaSyANRnQ2eSzNHam-u4mj85dLrtm9I_sWD6s',
+  authDomain: 'cv-builder-9a845.firebaseapp.com',
+  databaseURL:
+    'https://cv-builder-9a845-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'cv-builder-9a845',
+  storageBucket: 'cv-builder-9a845.firebasestorage.app',
+  messagingSenderId: '1045665473653',
+  appId: '1:1045665473653:web:a06a2497cf8abcb63bc43c',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+export default app;
