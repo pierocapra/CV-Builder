@@ -86,7 +86,9 @@ const Header = () => {
     <header className="bg-white shadow-md py-4 px-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-600">CV Builder</h1>
+          <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+            CV Builder
+          </Link>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 text-gray-600 hover:text-gray-900"
