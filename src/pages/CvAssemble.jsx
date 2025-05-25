@@ -47,7 +47,6 @@ function CvAssemble({ cvData: initialCvData }) {
     selectedItems, 
     saveSelectedItems, 
     savedTemplates,
-    currentTemplate,
     saveTemplate,
     loadTemplate,
     deleteTemplate 
@@ -134,6 +133,7 @@ function CvAssemble({ cvData: initialCvData }) {
       setSaveError('');
     } catch (error) {
       setSaveError('Failed to save template');
+      console.error('Failed to save template:', error);
     }
   };
 
