@@ -24,16 +24,6 @@ const Header = () => {
     }
   }
 
-//   function handleSignup() {
-//     navigate("/signup")
-// }
-
-  // function getInitials(name) {
-  //   const nameArray = name.split(' '); // Split the name into an array of words
-  //   const initials = nameArray.map(word => word.charAt(0).toUpperCase()); // Get the first character of each word and capitalize it
-  //   return initials.join(''); // Join the initials into a single string
-  // }
-
   const MenuItems = () => (
     <>
       {user ? (
@@ -87,7 +77,7 @@ const Header = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
-            CV Builder
+            📄 CV Builder
           </Link>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
