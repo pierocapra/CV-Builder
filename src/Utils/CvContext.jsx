@@ -17,6 +17,9 @@ export const CvProvider = ({ children }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [savedTemplates, setSavedTemplates] = useState([]);
   const [currentTemplate, setCurrentTemplate] = useState(null);
+  const [sectionOrder, setSectionOrder] = useState([
+    'summary', 'education', 'work', 'skills', 'links', 'additional'
+  ]);
 
   // Clear all state data
   const clearAllData = () => {
@@ -49,7 +52,8 @@ export const CvProvider = ({ children }) => {
             skillsData,
             linksData,
             selectedItemsData,
-            savedTemplatesData
+            savedTemplatesData,
+            sectionOrderData
           ] = await Promise.all([
             getData('personalInfo'),
             getData('additionalInfo'),
@@ -58,7 +62,8 @@ export const CvProvider = ({ children }) => {
             getData('skills'),
             getData('links'),
             getData('selectedItems'),
-            getData('savedTemplates')
+            getData('savedTemplates'),
+            getData('sectionOrder')
           ]);
 
           if (personalData) setPersonalInfo(personalData);
@@ -69,6 +74,7 @@ export const CvProvider = ({ children }) => {
           if (linksData) setLinks(linksData);
           if (selectedItemsData) setSelectedItems(selectedItemsData);
           if (savedTemplatesData) setSavedTemplates(savedTemplatesData);
+          if (sectionOrderData && Array.isArray(sectionOrderData)) setSectionOrder(sectionOrderData);
         } else {
           // User is not authenticated - fetch from localStorage
           const getLocalData = (key, setter) => {
@@ -86,6 +92,7 @@ export const CvProvider = ({ children }) => {
           getLocalData('links', setLinks);
           getLocalData('selectedItems', setSelectedItems);
           getLocalData('savedTemplates', setSavedTemplates);
+          getLocalData('sectionOrder', setSectionOrder);
         }
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -157,7 +164,8 @@ export const CvProvider = ({ children }) => {
         items,
         templateStyle,
         colorTheme,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        sectionOrder,
       };
 
       const updatedTemplates = [...savedTemplates, newTemplate];
@@ -184,6 +192,9 @@ export const CvProvider = ({ children }) => {
     if (template) {
       await saveSelectedItems(template.items);
       setCurrentTemplate(template);
+      if (template.sectionOrder && Array.isArray(template.sectionOrder)) {
+        setSectionOrder(template.sectionOrder);
+      }
       return template;
     }
     return null;
@@ -207,6 +218,23 @@ export const CvProvider = ({ children }) => {
     } catch (error) {
       console.error('Error deleting template:', error);
       throw error;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Save section order
+  const saveSectionOrder = async (order) => {
+    setIsSaving(true);
+    try {
+      if (user?.uid) {
+        await saveData('sectionOrder', order);
+      } else {
+        localStorage.setItem('sectionOrder', JSON.stringify(order));
+      }
+      setSectionOrder(order);
+    } catch (error) {
+      console.error('Error saving section order:', error);
     } finally {
       setIsSaving(false);
     }
@@ -237,6 +265,9 @@ export const CvProvider = ({ children }) => {
     loadTemplate,
     deleteTemplate,
     handleDelete,
+    sectionOrder,
+    setSectionOrder,
+    saveSectionOrder,
     cvData: {
       personal: personalInfo,
       additional: additionalInfo,
