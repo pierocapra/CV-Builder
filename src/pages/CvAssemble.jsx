@@ -314,7 +314,7 @@ function CvAssemble({ cvData: initialCvData }) {
             <button
               onClick={() => setIsTemplateSaveModalOpen(true)}
               className="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700"
-              title="Save current selection as template"
+              title="Save this template and selection to your data for future use."
             >
               Save
             </button>
@@ -326,7 +326,7 @@ function CvAssemble({ cvData: initialCvData }) {
                   ? 'bg-blue-600 hover:bg-blue-700' 
                   : 'bg-gray-400 cursor-not-allowed'
               }`}
-              title={!user ? 'Login to enable PDF download' : 'Download PDF'}
+              title={!user ? 'Login to enable PDF export' : 'Export your CV as a PDF file with full template layout.'}
             >
               PDF
             </button>
@@ -338,7 +338,7 @@ function CvAssemble({ cvData: initialCvData }) {
                   ? 'bg-green-600 hover:bg-green-700' 
                   : 'bg-gray-400 cursor-not-allowed'
               }`}
-              title={!user ? 'Login to enable DOCX download' : 'Download DOCX'}
+              title={!user ? 'Login to enable DOCX export' : 'Export your CV data as a Word (.docx) file. Note: This does not fully match the template layout.'}
             >
               DOCX
             </button>
