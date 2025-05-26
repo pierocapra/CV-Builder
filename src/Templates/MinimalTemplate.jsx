@@ -78,12 +78,18 @@ import {
                                     <div>
                                       <p className="font-semibold">{entry.item.degree} in {entry.item.field}</p>
                                       <p className="text-sm text-gray-600">{entry.item.school}, {entry.item.location}</p>
+                                      <p className="text-xs text-gray-500">
+                                        {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {entry.item.endDate === 'Present' ? 'Present' : new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                      </p>
                                     </div>
                                   )}
                                   {entry.type === 'work' && (
                                     <div>
                                       <p className="font-semibold">{entry.item.title}</p>
                                       <p className="text-sm text-gray-600">{entry.item.company}</p>
+                                      <p className="text-xs text-gray-500">
+                                        {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {entry.item.endDate === 'Present' ? 'Present' : new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                      </p>
                                       <p className="text-sm">{entry.item.description}</p>
                                     </div>
                                   )}
