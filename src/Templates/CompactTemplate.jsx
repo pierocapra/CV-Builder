@@ -9,6 +9,8 @@ import {
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
+
+  import { getPageMargins } from '../styles/PdfUtils';
   
   const renderSkills = (skills) => (
     <div className="flex flex-wrap gap-2 items-center">
@@ -31,7 +33,8 @@ import {
     };
   
     return (
-      <div className="bg-white p-5 font-sans text-gray-900 text-sm">
+      <div className="bg-white px-5 font-sans text-gray-900 text-sm">
+        <style>{getPageMargins()}</style>
         {/* Header */}
         {cvData.personal && (
           <header className="mb-4 pb-2">

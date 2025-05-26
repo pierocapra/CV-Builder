@@ -9,6 +9,8 @@ import {
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
+
+  import { getPageMargins } from '../styles/PdfUtils';
   
   const CreativeTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headerClasses = {
@@ -37,9 +39,12 @@ import {
 
     // Filter out summary from sections to be rendered in main content
     const mainSections = sectionOrder.filter(sectionKey => sectionKey !== 'summary');
+
+    
   
     const renderSkills = (skills) => (
       <div className="flex flex-wrap gap-2 items-center">
+        <style>{getPageMargins()}</style>
         {skills.map((entry, index) => (
           <span key={entry.id} className="text-sm text-gray-700">
             {entry.item.name} · {entry.item.level}
@@ -50,7 +55,7 @@ import {
     );
   
     return (
-      <div className="bg-white p-6 font-sans text-gray-900">
+      <div className="bg-white px-6 font-sans text-gray-900">
         {/* Header */}
         <header className={`relative p-8 mb-8 bg-gradient-to-br ${headerClasses[color]} text-white rounded-2xl shadow-2xl overflow-hidden`}>
           {/* Creative Background Pattern */}

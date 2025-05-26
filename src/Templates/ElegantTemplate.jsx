@@ -11,6 +11,8 @@ import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
 import { formatCvValue, formatFieldName } from "../Utils/formatters";
 
+import { getPageMargins } from '../styles/PdfUtils';
+
 const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder, color}) => {
   const textClasses = {
     gray: 'text-gray-500',
@@ -39,7 +41,9 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
   );
 
   return (
-    <div className="bg-white p-8 font-serif text-gray-800 leading-relaxed">
+    <div className="bg-white px-8 font-serif text-gray-800 leading-relaxed">
+
+      <style>{getPageMargins()}</style>
       {/* Header */}
       {cvData.personal && (
         <header className="mb-6 text-center">

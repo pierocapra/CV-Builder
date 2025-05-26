@@ -9,6 +9,8 @@ import {
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
+
+  import { getPageMargins } from '../styles/PdfUtils';
   
   const BoldTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headerClasses = {
@@ -50,7 +52,8 @@ import {
     );
   
     return (
-      <div className="bg-white p-6 font-sans text-gray-900">
+      <div className="bg-white px-6 font-sans text-gray-900">
+        <style>{getPageMargins()}</style>
         {/* Header */}
         <header className={`p-6 mb-8 ${headerClasses[color]} rounded-xl shadow-2xl relative overflow-hidden`}>
           {/* Background Pattern */}

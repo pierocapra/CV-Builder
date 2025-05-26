@@ -368,7 +368,7 @@ function CvAssemble({ cvData: initialCvData }) {
         flex-1  md:min-h-screen overflow-y-auto
         ${isSidebarOpen ? 'hidden md:block' : 'block'}
       `}>
-        <div ref={contentRef} className="max-w-4xl mx-auto bg-white shadow-lg p-4 md:p-8 mb-4">
+        <div ref={contentRef} className="max-w-4xl mx-auto bg-white p-4 md:p-8 mb-4">
           {template === 'modern' && (
             <ModernTemplate
               cvData={cvData}
