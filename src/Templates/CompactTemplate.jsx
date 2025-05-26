@@ -9,6 +9,8 @@ import {
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
+
+  import { getPageMargins } from '../styles/PdfUtils';
   
   const renderSkills = (skills) => (
     <div className="flex flex-wrap gap-2 items-center">
@@ -31,7 +33,8 @@ import {
     };
   
     return (
-      <div className="bg-white p-5 font-sans text-gray-900 text-sm">
+      <div className="bg-white px-5 pt-8 font-sans text-gray-900 text-sm">
+        <style>{getPageMargins()}</style>
         {/* Header */}
         {cvData.personal && (
           <header className="mb-4 pb-2">
@@ -56,7 +59,7 @@ import {
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-4 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                  <div className="mb-4 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move print:mt-8">
                     {sectionKey !== 'additional' ? (
                       <h2 className={`text-base font-semibold ${headingClasses[color]} mb-2 capitalize`}>
                         {sectionKey === 'summary' ? 'Professional Summary' : 
@@ -113,6 +116,18 @@ import {
                                       <p className="text-xs">
                                         <strong>{formatFieldName(entry.item.key)}:</strong> {formatCvValue(entry.item.key, entry.item.value)}
                                       </p>
+                                    )}
+                                    {/* Description as list if multiline */}
+                                    {entry.item.description && (
+                                      entry.item.description.includes('\n') ? (
+                                        <ul className="list-disc ml-6 mt-2 text-xs">
+                                          {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <p className="text-xs">{entry.item.description}</p>
+                                      )
                                     )}
                                   </li>
                                 )}

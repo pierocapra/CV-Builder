@@ -100,7 +100,16 @@ function AddEdit() {
                 <p><strong>Date of Birth:</strong> {formatDate(additionalInfo.dateOfBirth)}</p>
                 <p><strong>Eligible To Work In The Uk:</strong> {additionalInfo.eligibleToWorkInUk ? 'Yes' : 'No'}</p>
                 <p><strong>Driving License:</strong> {additionalInfo.hasDrivingLicense ? 'Yes' : 'No'}</p>
-                <p className="mt-4"><strong>Summary:</strong> {additionalInfo.summary}</p>
+                {additionalInfo.summaries && additionalInfo.summaries.length > 0 && (
+                  <div className="mt-4">
+                    <strong>Summaries:</strong>
+                    <ul className="list-disc ml-6 mt-1">
+                      {additionalInfo.summaries.map((summary, idx) => (
+                        <li key={idx} className="mb-1"><span className="font-medium">Summary {idx + 1}:</span> {summary}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <button
                   onClick={() => setIsAdditionalInfoOpen(true)}
                   className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
@@ -199,7 +208,18 @@ function AddEdit() {
                       <p className="text-sm text-gray-500">
                         {formatDate(job.startDate)} – {job.endDate === 'Present' ? 'Present' : formatDate(job.endDate)}
                       </p>
-                      {job.description && <p className="mt-2">{job.description}</p>}
+                      {/* Description as list if multiline */}
+                      {job.description && (
+                        job.description.includes('\n') ? (
+                          <ul className="list-disc ml-6 mt-2 text-sm">
+                            {job.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                              <li key={i}>{line}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="mt-2">{job.description}</p>
+                        )
+                      )}
                       
                       <div className="flex gap-3 mt-4">
                         <button

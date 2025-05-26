@@ -9,6 +9,8 @@ import {
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
+
+  import { getPageMargins } from '../styles/PdfUtils';
   
   const CreativeTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd, sectionOrder, color }) => {
     const headerClasses = {
@@ -37,9 +39,12 @@ import {
 
     // Filter out summary from sections to be rendered in main content
     const mainSections = sectionOrder.filter(sectionKey => sectionKey !== 'summary');
+
+    
   
     const renderSkills = (skills) => (
       <div className="flex flex-wrap gap-2 items-center">
+        <style>{getPageMargins()}</style>
         {skills.map((entry, index) => (
           <span key={entry.id} className="text-sm text-gray-700">
             {entry.item.name} · {entry.item.level}
@@ -50,7 +55,7 @@ import {
     );
   
     return (
-      <div className="bg-white p-6 font-sans text-gray-900">
+      <div className="bg-white px-6 pt-8 font-sans text-gray-900">
         {/* Header */}
         <header className={`relative p-8 mb-8 bg-gradient-to-br ${headerClasses[color]} text-white rounded-2xl shadow-2xl overflow-hidden`}>
           {/* Creative Background Pattern */}
@@ -140,7 +145,7 @@ import {
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
                   <div className={`mb-5 group bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl shadow-md 
-                    hover:shadow-lg transition-all duration-300 border border-gray-100`}>
+                    hover:shadow-lg transition-all duration-300 border border-gray-100 print:mt-8`}>
                     <h2 className={`text-lg font-serif font-semibold ${textClasses[color]} mb-3 capitalize flex items-center`}>
                       <span className="opacity-90">
                         {sectionKey === 'summary' ? 'Professional Summary' : 
@@ -184,7 +189,18 @@ import {
                                       </p>
                                     </div>
                                     <p className="text-sm text-gray-600 italic mb-1">{entry.item.location}</p>
-                                    <p className="text-sm text-gray-700">{entry.item.description}</p>
+                                    {/* Description as list if multiline */}
+                                    {entry.item.description && (
+                                      entry.item.description.includes('\n') ? (
+                                        <ul className="list-disc ml-6 mt-2 text-sm">
+                                          {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <p className="text-sm text-gray-700">{entry.item.description}</p>
+                                      )
+                                    )}
                                   </div>
                                 )}
                                 {entry.type === 'skills' && (

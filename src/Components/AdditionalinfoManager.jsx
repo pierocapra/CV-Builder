@@ -12,14 +12,17 @@ export default function AdditionalInfoManager({ onClose }) {
     dateOfBirth: '',
     eligibleToWorkInUk: false,
     hasDrivingLicense: false,
-    summary: '',
+    summaries: [''],
   });
 
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (additionalInfo && Object.keys(additionalInfo).length > 0) {
-      setFormData(additionalInfo);
+      setFormData({
+        ...additionalInfo,
+        summaries: additionalInfo.summaries || (additionalInfo.summary ? [additionalInfo.summary] : [''])
+      });
     }
   }, [additionalInfo]);
 
@@ -31,16 +34,37 @@ export default function AdditionalInfoManager({ onClose }) {
     }));
   };
 
+  const handleSummaryChange = (idx, value) => {
+    setFormData((prev) => {
+      const newSummaries = [...prev.summaries];
+      newSummaries[idx] = value;
+      return { ...prev, summaries: newSummaries };
+    });
+  };
+
+  const handleAddSummary = () => {
+    setFormData((prev) => ({ ...prev, summaries: [...prev.summaries, ''] }));
+  };
+
+  const handleRemoveSummary = (idx) => {
+    setFormData((prev) => {
+      const newSummaries = prev.summaries.filter((_, i) => i !== idx);
+      return { ...prev, summaries: newSummaries.length ? newSummaries : [''] };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     try {
+      const dataToSave = { ...formData };
+      delete dataToSave.summary;
       if (user?.uid) {
-        await saveData('additionalInfo', formData);
+        await saveData('additionalInfo', dataToSave);
       } else {
-        localStorage.setItem('additionalInfo', JSON.stringify(formData));
+        localStorage.setItem('additionalInfo', JSON.stringify(dataToSave));
       }
-      setAdditionalInfo(formData);
+      setAdditionalInfo(dataToSave);
       onClose();
     } catch (error) {
       console.error(error);
@@ -99,18 +123,25 @@ export default function AdditionalInfoManager({ onClose }) {
         </div>
 
         <div>
-          <label htmlFor="summary" className="block text-sm font-medium text-gray-700">
-            Professional Summary
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Professional Summaries
           </label>
-          <textarea
-            name="summary"
-            id="summary"
-            value={formData.summary}
-            onChange={handleChange}
-            placeholder="e.g. A highly motivated software developer with experience in React and Node.js..."
-            className="border p-2 rounded w-full h-24"
-            disabled={isSaving}
-          />
+          {formData.summaries.map((summary, idx) => (
+            <div key={idx} className="flex items-center mb-2 gap-2">
+              <textarea
+                name={`summary-${idx}`}
+                value={summary}
+                onChange={e => handleSummaryChange(idx, e.target.value)}
+                placeholder="e.g. A highly motivated software developer with experience in React and Node.js..."
+                className="border p-2 rounded w-full h-24"
+                disabled={isSaving}
+              />
+              {formData.summaries.length > 1 && (
+                <button type="button" onClick={() => handleRemoveSummary(idx)} className="text-red-500 px-2 py-1 rounded hover:bg-red-100">Remove</button>
+              )}
+            </div>
+          ))}
+          <button type="button" onClick={handleAddSummary} className="text-blue-600 mt-2 px-2 py-1 rounded hover:bg-blue-100">+ Add Another Summary</button>
         </div>
 
         <button

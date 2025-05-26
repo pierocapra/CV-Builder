@@ -9,6 +9,8 @@ import {
   
   import { SortableItem, SortableSection } from "../Utils/DndUtils.jsx";
   import { formatCvValue, formatFieldName } from "../Utils/formatters";
+
+  import { getPageMargins } from '../styles/PdfUtils';
   
   const renderSkills = (skills) => (
     <div className="flex flex-wrap gap-2 items-center">
@@ -31,7 +33,8 @@ import {
     };
   
     return (
-      <div className="bg-white p-8 font-sans text-gray-900">
+      <div className="bg-white px-8 pt-8 font-sans text-gray-900">
+        <style>{getPageMargins()}</style>
         {/* Header */}
         {cvData.personal && (
           <header className="mb-6">
@@ -54,7 +57,7 @@ import {
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-6 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded p-2 transition">
+                  <div className="mb-6 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded p-2 transition print:mt-8">
                     {sectionKey !== 'additional' ? (
                       <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2 capitalize`}>
                         {sectionKey === 'summary' ? 'Professional Summary' : sectionKey}
@@ -75,13 +78,30 @@ import {
                                     <div>
                                       <p className="font-semibold">{entry.item.degree} in {entry.item.field}</p>
                                       <p className="text-sm text-gray-600">{entry.item.school}, {entry.item.location}</p>
+                                      <p className="text-xs text-gray-500">
+                                        {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {entry.item.endDate === 'Present' ? 'Present' : new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                      </p>
                                     </div>
                                   )}
                                   {entry.type === 'work' && (
                                     <div>
                                       <p className="font-semibold">{entry.item.title}</p>
                                       <p className="text-sm text-gray-600">{entry.item.company}</p>
-                                      <p className="text-sm">{entry.item.description}</p>
+                                      <p className="text-xs text-gray-500">
+                                        {new Date(entry.item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })} – {entry.item.endDate === 'Present' ? 'Present' : new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                      </p>
+                                      {/* Description as list if multiline */}
+                                      {entry.item.description && (
+                                        entry.item.description.includes('\n') ? (
+                                          <ul className="list-disc ml-6 mt-2 text-sm">
+                                            {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                              <li key={i}>{line}</li>
+                                            ))}
+                                          </ul>
+                                        ) : (
+                                          <p className="text-sm">{entry.item.description}</p>
+                                        )
+                                      )}
                                     </div>
                                   )}
                                   {entry.type === 'skills' && (

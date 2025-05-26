@@ -11,12 +11,14 @@ import { SortableItem } from "../Utils/DndUtils.jsx";
 import { SortableSection } from "../Utils/DndUtils.jsx";
 import { formatCvValue, formatFieldName } from "../Utils/formatters";
 
+import { getPageMargins } from '../styles/PdfUtils';
+
 const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSectionDragEnd,  sectionOrder, color}) => {
   const textClasses = {
     gray: 'text-gray-500',
     sky: 'text-sky-600',
     teal: 'text-teal-600',
-    red: 'text-red-400',
+    red: 'text-red-500',
     cyan: 'text-cyan-600',
   };
   const borderClasses = {
@@ -39,7 +41,9 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
   );
 
   return (
-    <div className="bg-white p-8 font-serif text-gray-800 leading-relaxed">
+    <div className="bg-white px-8 pt-8 font-serif text-gray-800 leading-relaxed">
+
+      <style>{getPageMargins()}</style>
       {/* Header */}
       {cvData.personal && (
         <header className="mb-6 text-center">
@@ -72,7 +76,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
           {sectionOrder.map((sectionKey) =>
             groupedItems[sectionKey]?.length ? (
               <SortableSection key={sectionKey} id={sectionKey}>
-                <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move print:mt-8">
                   <h2 className={`text-xl font-serif ${textClasses[color]} mb-3 capitalize`}>
                     {sectionKey === 'summary' ? 'Professional Summary' : 
                      sectionKey === 'additional' ? 'Additional Info' : 
@@ -125,7 +129,18 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                                         new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
                                       }
                                     </p>
-                                    <p className="text-sm mt-1">{entry.item.description}</p>
+                                    {/* Description as list if multiline */}
+                                    {entry.item.description && (
+                                      entry.item.description.includes('\n') ? (
+                                        <ul className="list-disc ml-6 mt-2 text-sm">
+                                          {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <p className="text-sm mt-1">{entry.item.description}</p>
+                                      )
+                                    )}
                                   </div>
                                 )}
                                 {entry.type === 'links' && (

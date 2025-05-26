@@ -22,6 +22,8 @@ import { useAuth } from '../Utils/AuthContext';
 import CustomDropdown from '../Components/CustomDropdown';
 import { formatFieldName, formatCvValue } from '../Utils/formatters';
 import { useCv } from '../Utils/cvHooks';
+import { saveAs } from 'file-saver';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 
 // Template options
 const templateOptions = [
@@ -158,6 +160,128 @@ function CvAssemble({ cvData: initialCvData }) {
     }
   };
 
+  // DOCX export handler
+  const handleExportDocx = () => {
+    // Helper to get section items
+    const getSection = (type) => groupedItems[type] || [];
+    const docSections = [];
+
+    // Name
+    if (cvData.personal) {
+      docSections.push(new Paragraph({
+        children: [
+          new TextRun({ text: `${cvData.personal.firstName || ''} ${cvData.personal.lastName || ''}`, bold: true, size: 32 }),
+        ],
+        spacing: { after: 200 },
+      }));
+    }
+
+    // Summary
+    const summary = getSection('summary')[0]?.item?.value;
+    if (summary) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: summary, italics: true })],
+        spacing: { after: 200 },
+      }));
+    }
+
+    // Education
+    const education = getSection('education');
+    if (education.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Education', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      education.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [
+            new TextRun({ text: `${item.degree} in ${item.field} - ${item.school} (${item.startDate} - ${item.endDate})`, bold: true }),
+            new TextRun({ text: `, ${item.location}` }),
+          ],
+        }));
+      });
+      docSections.push(new Paragraph(''));
+    }
+
+    // Work
+    const work = getSection('work');
+    if (work.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Work Experience', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      work.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [
+            new TextRun({ text: `${item.title} at ${item.company} (${item.startDate} - ${item.endDate})`, bold: true }),
+            new TextRun({ text: `, ${item.location}` }),
+          ],
+        }));
+        if (item.description) {
+          docSections.push(new Paragraph({
+            children: [new TextRun({ text: item.description })],
+          }));
+        }
+      });
+      docSections.push(new Paragraph(''));
+    }
+
+    // Skills
+    const skills = getSection('skills');
+    if (skills.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Skills', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      docSections.push(new Paragraph({
+        children: [
+          new TextRun({ text: skills.map(({ item }) => `${item.name} (${item.level})`).join(', ') })
+        ],
+      }));
+      docSections.push(new Paragraph(''));
+    }
+
+    // Links
+    const links = getSection('links');
+    if (links.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Links', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      links.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [new TextRun({ text: `${item.label}: ${item.url}` })],
+        }));
+      });
+      docSections.push(new Paragraph(''));
+    }
+
+    // Additional Info
+    const additional = getSection('additional');
+    if (additional.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Additional Info', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      additional.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [new TextRun({ text: `${formatFieldName(item.key)}: ${formatCvValue(item.key, item.value)}` })],
+        }));
+      });
+    }
+
+    const doc = new Document({
+      sections: [
+        {
+          children: docSections,
+        },
+      ],
+    });
+    Packer.toBlob(doc).then((blob) => {
+      saveAs(blob, 'cv.docx');
+    });
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen gap-4">
       {/* Mobile Sidebar Toggle */}
@@ -190,7 +314,7 @@ function CvAssemble({ cvData: initialCvData }) {
             <button
               onClick={() => setIsTemplateSaveModalOpen(true)}
               className="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700"
-              title="Save current selection as template"
+              title="Save this template and selection to your data for future use."
             >
               Save
             </button>
@@ -202,9 +326,21 @@ function CvAssemble({ cvData: initialCvData }) {
                   ? 'bg-blue-600 hover:bg-blue-700' 
                   : 'bg-gray-400 cursor-not-allowed'
               }`}
-              title={!user ? 'Login to enable PDF download' : 'Download PDF'}
+              title={!user ? 'Login to enable PDF export' : 'Export your CV as a PDF file with full template layout.'}
             >
               PDF
+            </button>
+            <button
+              onClick={handleExportDocx}
+              disabled={!user}
+              className={`px-3 py-1 rounded text-white ${
+                user 
+                  ? 'bg-green-600 hover:bg-green-700' 
+                  : 'bg-gray-400 cursor-not-allowed'
+              }`}
+              title={!user ? 'Login to enable DOCX export' : 'Export your CV data as a Word (.docx) file. Note: This does not fully match the template layout.'}
+            >
+              DOCX
             </button>
           </div>
         </div>
@@ -253,17 +389,32 @@ function CvAssemble({ cvData: initialCvData }) {
         {/* Summary */}
         <div className="mb-4">
           <label className="block font-medium mb-2">Summary</label>
-          {cvData.additional?.summary && (
-            <div className="ml-2">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  onChange={() => toggleItem('summary', { value: cvData.additional.summary })}
-                  checked={selectedItems.some(i => i.type === 'summary')}
-                  className="form-checkbox"
-                />
-                <span className="text-sm">Professional Summary</span>
-              </label>
+          {cvData.additional?.summaries && cvData.additional.summaries.length > 0 && (
+            <div className="ml-2 space-y-1">
+              {cvData.additional.summaries.map((summary, idx) => {
+                const id = `summary-${idx}`;
+                const isSelected = selectedItems.some(i => i.type === 'summary' && i.item.idx === idx);
+                // Get first 8 words for preview
+                const preview = summary.split(/\s+/).slice(0, 8).join(' ');
+                const ellipsis = summary.split(/\s+/).length > 8 ? ' ...' : '';
+                return (
+                  <label key={id} className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="summary-choice"
+                      onChange={() => {
+                        // Remove any existing summary from selectedItems, then add this one
+                        const filtered = selectedItems.filter(i => i.type !== 'summary');
+                        const newItem = { type: 'summary', item: { value: summary, idx }, id: `summary-${idx}` };
+                        saveSelectedItems([...filtered, newItem]);
+                      }}
+                      checked={isSelected}
+                      className="form-radio"
+                    />
+                    <span className="text-sm">Summary {idx + 1} - {preview}{ellipsis}</span>
+                  </label>
+                );
+              })}
             </div>
           )}
         </div>
@@ -272,7 +423,7 @@ function CvAssemble({ cvData: initialCvData }) {
         <div className="mb-4">
           <label className="block font-medium mb-2">Additional Info</label>
           {Object.entries(cvData.additional || {})
-            .filter(([key]) => key !== 'summary')
+            .filter(([key]) => key !== 'summary' && key !== 'summaries')
             .map(([key, value]) => (
               <div key={key} className="ml-2">
                 <label className="flex items-center space-x-2">
@@ -299,7 +450,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('education', edu)}
-                  checked={selectedItems.some(i => i.type === 'education' && i.item === edu)}
+                  checked={selectedItems.some(i => i.type === 'education' && i.item.degree === edu.degree && i.item.school === edu.school && i.item.startDate === edu.startDate)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{edu.degree} - {edu.school}</span>
@@ -317,7 +468,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('work', job)}
-                  checked={selectedItems.some(i => i.type === 'work' && i.item === job)}
+                  checked={selectedItems.some(i => i.type === 'work' && i.item.title === job.title && i.item.company === job.company && i.item.startDate === job.startDate)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{job.title} at {job.company}</span>
@@ -335,7 +486,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('skills', skill)}
-                  checked={selectedItems.some(i => i.type === 'skills' && i.item === skill)}
+                  checked={selectedItems.some(i => i.type === 'skills' && i.item.name === skill.name && i.item.level === skill.level)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{skill.name} ({skill.level})</span>
@@ -353,7 +504,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('links', link)}
-                  checked={selectedItems.some(i => i.type === 'links' && i.item === link)}
+                  checked={selectedItems.some(i => i.type === 'links' && i.item.label === link.label && i.item.url === link.url)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{link.label}: {link.url}</span>
@@ -368,7 +519,7 @@ function CvAssemble({ cvData: initialCvData }) {
         flex-1  md:min-h-screen overflow-y-auto
         ${isSidebarOpen ? 'hidden md:block' : 'block'}
       `}>
-        <div ref={contentRef} className="max-w-4xl mx-auto bg-white shadow-lg p-4 md:p-8 mb-4">
+        <div ref={contentRef} className="max-w-4xl mx-auto bg-white p-4 md:p-8 mb-4">
           {template === 'modern' && (
             <ModernTemplate
               cvData={cvData}
