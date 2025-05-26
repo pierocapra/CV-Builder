@@ -18,7 +18,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
     gray: 'text-gray-500',
     sky: 'text-sky-600',
     teal: 'text-teal-600',
-    red: 'text-red-400',
+    red: 'text-red-500',
     cyan: 'text-cyan-600',
   };
   const borderClasses = {
@@ -41,7 +41,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
   );
 
   return (
-    <div className="bg-white px-8 font-serif text-gray-800 leading-relaxed">
+    <div className="bg-white px-8 pt-8 font-serif text-gray-800 leading-relaxed">
 
       <style>{getPageMargins()}</style>
       {/* Header */}
@@ -76,7 +76,7 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
           {sectionOrder.map((sectionKey) =>
             groupedItems[sectionKey]?.length ? (
               <SortableSection key={sectionKey} id={sectionKey}>
-                <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                <div className="mb-8 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move print:mt-8">
                   <h2 className={`text-xl font-serif ${textClasses[color]} mb-3 capitalize`}>
                     {sectionKey === 'summary' ? 'Professional Summary' : 
                      sectionKey === 'additional' ? 'Additional Info' : 

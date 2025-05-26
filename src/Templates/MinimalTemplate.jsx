@@ -33,8 +33,7 @@ import {
     };
   
     return (
-      <div className="bg-white px-8 font-sans text-gray-900">
-
+      <div className="bg-white px-8 pt-8 font-sans text-gray-900">
         <style>{getPageMargins()}</style>
         {/* Header */}
         {cvData.personal && (
@@ -58,7 +57,7 @@ import {
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-6 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded p-2 transition">
+                  <div className="mb-6 group border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move rounded p-2 transition print:mt-8">
                     {sectionKey !== 'additional' ? (
                       <h2 className={`text-xl ${textClasses[color]} font-semibold mb-2 capitalize`}>
                         {sectionKey === 'summary' ? 'Professional Summary' : sectionKey}

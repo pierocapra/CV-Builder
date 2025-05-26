@@ -34,7 +34,7 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
   );
 
   return (
-    <div className="bg-white px-6 text-gray-800">
+    <div className="bg-white px-6 pt-8 text-gray-800">
       
       <style>{getPageMargins()}</style>
       {/* Header */}
@@ -70,7 +70,7 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
             {sectionOrder.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className="mb-4 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move">
+                  <div className="mb-4 border border-transparent hover:border-dashed hover:border-gray-400 rounded hover:cursor-move print:mt-8">
                     {sectionKey !== 'additional' ? (
                       <h2 className={`text-lg font-semibold ${textClasses[color]} mb-2 capitalize`}>
                         {sectionKey === 'summary' ? 'Professional Summary' : sectionKey}

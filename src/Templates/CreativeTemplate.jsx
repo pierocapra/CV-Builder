@@ -55,7 +55,7 @@ import {
     );
   
     return (
-      <div className="bg-white px-6 font-sans text-gray-900">
+      <div className="bg-white px-6 pt-8 font-sans text-gray-900">
         {/* Header */}
         <header className={`relative p-8 mb-8 bg-gradient-to-br ${headerClasses[color]} text-white rounded-2xl shadow-2xl overflow-hidden`}>
           {/* Creative Background Pattern */}
@@ -145,7 +145,7 @@ import {
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
                   <div className={`mb-5 group bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl shadow-md 
-                    hover:shadow-lg transition-all duration-300 border border-gray-100`}>
+                    hover:shadow-lg transition-all duration-300 border border-gray-100 print:mt-8`}>
                     <h2 className={`text-lg font-serif font-semibold ${textClasses[color]} mb-3 capitalize flex items-center`}>
                       <span className="opacity-90">
                         {sectionKey === 'summary' ? 'Professional Summary' : 

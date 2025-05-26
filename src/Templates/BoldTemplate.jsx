@@ -52,7 +52,7 @@ import {
     );
   
     return (
-      <div className="bg-white px-6 font-sans text-gray-900">
+      <div className="bg-white px-6 pt-8 font-sans text-gray-900">
         <style>{getPageMargins()}</style>
         {/* Header */}
         <header className={`p-6 mb-8 ${headerClasses[color]} rounded-xl shadow-2xl relative overflow-hidden`}>
@@ -108,7 +108,7 @@ import {
             {mainSections.map((sectionKey) =>
               groupedItems[sectionKey]?.length ? (
                 <SortableSection key={sectionKey} id={sectionKey}>
-                  <div className={`mb-8 ${sectionClasses[color]} p-5 rounded-xl shadow-lg hover:outline hover:outline-1 hover:outline-dashed hover:outline-gray-400`}>
+                  <div className={`mb-8 ${sectionClasses[color]} p-5 rounded-xl shadow-lg hover:outline hover:outline-1 hover:outline-dashed hover:outline-gray-400 print:mt-8`}>
                     <h2 className={`text-xl font-bold ${textClasses[color]} mb-3 capitalize`}>
                       {sectionKey === 'summary' ? 'Professional Summary' : 
                        sectionKey === 'additional' ? 'Additional Info' : 
