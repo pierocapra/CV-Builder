@@ -52,14 +52,13 @@ function CvAssemble({ cvData: initialCvData }) {
     savedTemplates,
     saveTemplate,
     loadTemplate,
-    deleteTemplate 
+    deleteTemplate,
+    sectionOrder,
+    saveSectionOrder
   } = useCv();
   const cvData = initialCvData || {};
   const [template, setTemplate] = useState('minimal');
   const [color, setColor] = useState('gray');
-  const [sectionOrder, setSectionOrder] = useState([
-    'summary', 'education', 'work', 'skills', 'links', 'additional'
-  ]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isTemplateSaveModalOpen, setIsTemplateSaveModalOpen] = useState(false);
   const [templateName, setTemplateName] = useState('');
@@ -107,7 +106,8 @@ function CvAssemble({ cvData: initialCvData }) {
     const oldIndex = sectionOrder.findIndex((id) => id === active.id);
     const newIndex = sectionOrder.findIndex((id) => id === over.id);
 
-    setSectionOrder((items) => arrayMove(items, oldIndex, newIndex));
+    const newOrder = arrayMove(sectionOrder, oldIndex, newIndex);
+    saveSectionOrder(newOrder);
   };
 
   const toggleItem = (type, item) => {
