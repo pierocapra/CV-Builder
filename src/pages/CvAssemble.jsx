@@ -22,6 +22,8 @@ import { useAuth } from '../Utils/AuthContext';
 import CustomDropdown from '../Components/CustomDropdown';
 import { formatFieldName, formatCvValue } from '../Utils/formatters';
 import { useCv } from '../Utils/cvHooks';
+import { saveAs } from 'file-saver';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 
 // Template options
 const templateOptions = [
@@ -158,6 +160,128 @@ function CvAssemble({ cvData: initialCvData }) {
     }
   };
 
+  // DOCX export handler
+  const handleExportDocx = () => {
+    // Helper to get section items
+    const getSection = (type) => groupedItems[type] || [];
+    const docSections = [];
+
+    // Name
+    if (cvData.personal) {
+      docSections.push(new Paragraph({
+        children: [
+          new TextRun({ text: `${cvData.personal.firstName || ''} ${cvData.personal.lastName || ''}`, bold: true, size: 32 }),
+        ],
+        spacing: { after: 200 },
+      }));
+    }
+
+    // Summary
+    const summary = getSection('summary')[0]?.item?.value;
+    if (summary) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: summary, italics: true })],
+        spacing: { after: 200 },
+      }));
+    }
+
+    // Education
+    const education = getSection('education');
+    if (education.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Education', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      education.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [
+            new TextRun({ text: `${item.degree} in ${item.field} - ${item.school} (${item.startDate} - ${item.endDate})`, bold: true }),
+            new TextRun({ text: `, ${item.location}` }),
+          ],
+        }));
+      });
+      docSections.push(new Paragraph(''));
+    }
+
+    // Work
+    const work = getSection('work');
+    if (work.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Work Experience', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      work.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [
+            new TextRun({ text: `${item.title} at ${item.company} (${item.startDate} - ${item.endDate})`, bold: true }),
+            new TextRun({ text: `, ${item.location}` }),
+          ],
+        }));
+        if (item.description) {
+          docSections.push(new Paragraph({
+            children: [new TextRun({ text: item.description })],
+          }));
+        }
+      });
+      docSections.push(new Paragraph(''));
+    }
+
+    // Skills
+    const skills = getSection('skills');
+    if (skills.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Skills', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      docSections.push(new Paragraph({
+        children: [
+          new TextRun({ text: skills.map(({ item }) => `${item.name} (${item.level})`).join(', ') })
+        ],
+      }));
+      docSections.push(new Paragraph(''));
+    }
+
+    // Links
+    const links = getSection('links');
+    if (links.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Links', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      links.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [new TextRun({ text: `${item.label}: ${item.url}` })],
+        }));
+      });
+      docSections.push(new Paragraph(''));
+    }
+
+    // Additional Info
+    const additional = getSection('additional');
+    if (additional.length) {
+      docSections.push(new Paragraph({
+        children: [new TextRun({ text: 'Additional Info', bold: true, size: 28 })],
+        spacing: { after: 100 },
+      }));
+      additional.forEach(({ item }) => {
+        docSections.push(new Paragraph({
+          children: [new TextRun({ text: `${formatFieldName(item.key)}: ${formatCvValue(item.key, item.value)}` })],
+        }));
+      });
+    }
+
+    const doc = new Document({
+      sections: [
+        {
+          children: docSections,
+        },
+      ],
+    });
+    Packer.toBlob(doc).then((blob) => {
+      saveAs(blob, 'cv.docx');
+    });
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen gap-4">
       {/* Mobile Sidebar Toggle */}
@@ -205,6 +329,18 @@ function CvAssemble({ cvData: initialCvData }) {
               title={!user ? 'Login to enable PDF download' : 'Download PDF'}
             >
               PDF
+            </button>
+            <button
+              onClick={handleExportDocx}
+              disabled={!user}
+              className={`px-3 py-1 rounded text-white ${
+                user 
+                  ? 'bg-green-600 hover:bg-green-700' 
+                  : 'bg-gray-400 cursor-not-allowed'
+              }`}
+              title={!user ? 'Login to enable DOCX download' : 'Download DOCX'}
+            >
+              DOCX
             </button>
           </div>
         </div>
