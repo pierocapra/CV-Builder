@@ -20,10 +20,20 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
   );
 
   const [error, setError] = useState(null);
+  const [current, setCurrent] = useState(existingEntry?.endDate === 'Present');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEntry((prev) => ({ ...prev, [name]: value }));
+    if (name === 'endDate' && value !== 'Present') {
+      setCurrent(false);
+    }
+  };
+
+  const handleCurrentChange = (e) => {
+    const checked = e.target.checked;
+    setCurrent(checked);
+    setEntry((prev) => ({ ...prev, endDate: checked ? 'Present' : '' }));
   };
 
   const handleSubmit = async (e) => {
@@ -126,11 +136,21 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           type="date"
           name="endDate"
           id="endDate"
-          value={entry.endDate}
+          value={current ? '' : entry.endDate}
           onChange={handleChange}
           className="border p-2 rounded w-full"
-          disabled={isSaving}
+          disabled={isSaving || current}
         />
+        <label className="flex items-center mt-2">
+          <input
+            type="checkbox"
+            checked={current}
+            onChange={handleCurrentChange}
+            disabled={isSaving}
+            className="mr-2"
+          />
+          Current
+        </label>
       </div>
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
