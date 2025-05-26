@@ -100,7 +100,16 @@ function AddEdit() {
                 <p><strong>Date of Birth:</strong> {formatDate(additionalInfo.dateOfBirth)}</p>
                 <p><strong>Eligible To Work In The Uk:</strong> {additionalInfo.eligibleToWorkInUk ? 'Yes' : 'No'}</p>
                 <p><strong>Driving License:</strong> {additionalInfo.hasDrivingLicense ? 'Yes' : 'No'}</p>
-                <p className="mt-4"><strong>Summary:</strong> {additionalInfo.summary}</p>
+                {additionalInfo.summaries && additionalInfo.summaries.length > 0 && (
+                  <div className="mt-4">
+                    <strong>Summaries:</strong>
+                    <ul className="list-disc ml-6 mt-1">
+                      {additionalInfo.summaries.map((summary, idx) => (
+                        <li key={idx} className="mb-1"><span className="font-medium">Summary {idx + 1}:</span> {summary}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <button
                   onClick={() => setIsAdditionalInfoOpen(true)}
                   className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"

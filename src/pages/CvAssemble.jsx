@@ -253,17 +253,32 @@ function CvAssemble({ cvData: initialCvData }) {
         {/* Summary */}
         <div className="mb-4">
           <label className="block font-medium mb-2">Summary</label>
-          {cvData.additional?.summary && (
-            <div className="ml-2">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  onChange={() => toggleItem('summary', { value: cvData.additional.summary })}
-                  checked={selectedItems.some(i => i.type === 'summary')}
-                  className="form-checkbox"
-                />
-                <span className="text-sm">Professional Summary</span>
-              </label>
+          {cvData.additional?.summaries && cvData.additional.summaries.length > 0 && (
+            <div className="ml-2 space-y-1">
+              {cvData.additional.summaries.map((summary, idx) => {
+                const id = `summary-${idx}`;
+                const isSelected = selectedItems.some(i => i.type === 'summary' && i.item.idx === idx);
+                // Get first 8 words for preview
+                const preview = summary.split(/\s+/).slice(0, 8).join(' ');
+                const ellipsis = summary.split(/\s+/).length > 8 ? ' ...' : '';
+                return (
+                  <label key={id} className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="summary-choice"
+                      onChange={() => {
+                        // Remove any existing summary from selectedItems, then add this one
+                        const filtered = selectedItems.filter(i => i.type !== 'summary');
+                        const newItem = { type: 'summary', item: { value: summary, idx }, id: `summary-${idx}` };
+                        saveSelectedItems([...filtered, newItem]);
+                      }}
+                      checked={isSelected}
+                      className="form-radio"
+                    />
+                    <span className="text-sm">Summary {idx + 1} - {preview}{ellipsis}</span>
+                  </label>
+                );
+              })}
             </div>
           )}
         </div>
@@ -272,7 +287,7 @@ function CvAssemble({ cvData: initialCvData }) {
         <div className="mb-4">
           <label className="block font-medium mb-2">Additional Info</label>
           {Object.entries(cvData.additional || {})
-            .filter(([key]) => key !== 'summary')
+            .filter(([key]) => key !== 'summary' && key !== 'summaries')
             .map(([key, value]) => (
               <div key={key} className="ml-2">
                 <label className="flex items-center space-x-2">
