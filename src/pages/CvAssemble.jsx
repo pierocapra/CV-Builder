@@ -299,7 +299,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('education', edu)}
-                  checked={selectedItems.some(i => i.type === 'education' && i.item === edu)}
+                  checked={selectedItems.some(i => i.type === 'education' && i.item.degree === edu.degree && i.item.school === edu.school && i.item.startDate === edu.startDate)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{edu.degree} - {edu.school}</span>
@@ -317,7 +317,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('work', job)}
-                  checked={selectedItems.some(i => i.type === 'work' && i.item === job)}
+                  checked={selectedItems.some(i => i.type === 'work' && i.item.title === job.title && i.item.company === job.company && i.item.startDate === job.startDate)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{job.title} at {job.company}</span>
@@ -335,7 +335,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('skills', skill)}
-                  checked={selectedItems.some(i => i.type === 'skills' && i.item === skill)}
+                  checked={selectedItems.some(i => i.type === 'skills' && i.item.name === skill.name && i.item.level === skill.level)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{skill.name} ({skill.level})</span>
@@ -353,7 +353,7 @@ function CvAssemble({ cvData: initialCvData }) {
                 <input
                   type="checkbox"
                   onChange={() => toggleItem('links', link)}
-                  checked={selectedItems.some(i => i.type === 'links' && i.item === link)}
+                  checked={selectedItems.some(i => i.type === 'links' && i.item.label === link.label && i.item.url === link.url)}
                   className="form-checkbox"
                 />
                 <span className="text-sm">{link.label}: {link.url}</span>
