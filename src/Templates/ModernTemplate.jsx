@@ -116,7 +116,18 @@ const ModernTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleSe
                                         new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
                                       }
                                     </p>
-                                    <p className="mt-1 text-sm">{entry.item.description}</p>
+                                    {/* Description as list if multiline */}
+                                    {entry.item.description && (
+                                      entry.item.description.includes('\n') ? (
+                                        <ul className="list-disc ml-6 mt-2 text-sm">
+                                          {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <p className="mt-1 text-sm">{entry.item.description}</p>
+                                      )
+                                    )}
                                   </>
                                 )}
                                 {entry.type === 'links' && (

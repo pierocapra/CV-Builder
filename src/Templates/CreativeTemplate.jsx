@@ -189,7 +189,18 @@ import {
                                       </p>
                                     </div>
                                     <p className="text-sm text-gray-600 italic mb-1">{entry.item.location}</p>
-                                    <p className="text-sm text-gray-700">{entry.item.description}</p>
+                                    {/* Description as list if multiline */}
+                                    {entry.item.description && (
+                                      entry.item.description.includes('\n') ? (
+                                        <ul className="list-disc ml-6 mt-2 text-sm">
+                                          {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <p className="text-sm text-gray-700">{entry.item.description}</p>
+                                      )
+                                    )}
                                   </div>
                                 )}
                                 {entry.type === 'skills' && (

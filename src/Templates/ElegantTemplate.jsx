@@ -129,7 +129,18 @@ const ElegantTemplate = ({ cvData, groupedItems, handleDragEnd, sensors, handleS
                                         new Date(entry.item.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })
                                       }
                                     </p>
-                                    <p className="text-sm mt-1">{entry.item.description}</p>
+                                    {/* Description as list if multiline */}
+                                    {entry.item.description && (
+                                      entry.item.description.includes('\n') ? (
+                                        <ul className="list-disc ml-6 mt-2 text-sm">
+                                          {entry.item.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <p className="text-sm mt-1">{entry.item.description}</p>
+                                      )
+                                    )}
                                   </div>
                                 )}
                                 {entry.type === 'links' && (

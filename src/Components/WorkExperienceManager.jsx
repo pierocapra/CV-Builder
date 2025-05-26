@@ -165,6 +165,7 @@ export default function WorkExperienceManager({ onClose, existingEntry = null, i
           className="border p-2 rounded w-full h-32"
           disabled={isSaving}
         />
+        <p className="text-xs text-gray-500 mt-1">Use a new line for each responsibility or achievement (each line will be a bullet point).</p>
       </div>
       <button
         type="submit"

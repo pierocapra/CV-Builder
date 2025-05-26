@@ -208,7 +208,18 @@ function AddEdit() {
                       <p className="text-sm text-gray-500">
                         {formatDate(job.startDate)} – {job.endDate === 'Present' ? 'Present' : formatDate(job.endDate)}
                       </p>
-                      {job.description && <p className="mt-2">{job.description}</p>}
+                      {/* Description as list if multiline */}
+                      {job.description && (
+                        job.description.includes('\n') ? (
+                          <ul className="list-disc ml-6 mt-2 text-sm">
+                            {job.description.split(/\r?\n/).filter(Boolean).map((line, i) => (
+                              <li key={i}>{line}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="mt-2">{job.description}</p>
+                        )
+                      )}
                       
                       <div className="flex gap-3 mt-4">
                         <button
